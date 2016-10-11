@@ -1,28 +1,49 @@
 var app = (function ($) {
     "use strict";
 
-    /** Private properties */
+    var resourceHtml = $('#resource').html(),
+        htmlView = $('#view').html(resourceHtml).find('*'),
+        pages = [];
 
-    /** Private methods */
-    var showSection;
+    var savePage = function (html) {
+        var htmlLength = html.length,
+            currentElementOffsetTop, currentElementHeight;
 
-    /**
-     * Show after scroll
-     * */
-    showSection = function () {
+        for (var i=0; i<htmlLength; i++) {
+            currentElementOffsetTop = html.eq(i).offset().top;
+            currentElementHeight = html.eq(i).height();
 
+            if (currentElementOffsetTop + currentElementHeight > 480) {
+                pages.push(html.slice(0, i));
+                htmlView = $('#view').html(html.slice(i)).find('*');
+
+                app.pageThread();
+                break;
+            }
+
+            if (i === htmlLength - 1) {
+                pages.push(html);
+                break;
+            }
+        }
     };
 
     return {
-        /**
-         * Toggle mobile menu
-         * */
-        mobileMenu: function () {
+        pageThread: function () {
+            savePage(htmlView);
+            console.log(pages);
+        },
 
+        pagesShow: function () {
+            pages.forEach(function (item) {
+                $('body').append('<section class="view">');
+                $('.view:last-child').html(item);
+            });
         },
 
         init: function() {
-            app.mobileMenu();
+            app.pageThread();
+            app.pagesShow();
         }
 
     };

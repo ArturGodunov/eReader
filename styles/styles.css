@@ -1,8 +1,16 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+}
+
 #resource{
     display: none;
 }
 
-#view{
+.view{
     width: 320px;
     height: 480px;
     border: 1px solid #000;
