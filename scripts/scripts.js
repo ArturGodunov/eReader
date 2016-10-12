@@ -20,6 +20,7 @@ var app = (function ($) {
         slider = $('#slider').bxSlider({
             infiniteLoop: false,
             hideControlOnEnd: true,
+            pager: false,
 
             onSliderLoad: function () {
                 onchangePagesIndex();
@@ -37,7 +38,7 @@ var app = (function ($) {
             $('.slider-item:last-child').html(item);
         });
 
-        initSlider();
+        // initSlider();
     };
 
     var pageThread = function (html) {
