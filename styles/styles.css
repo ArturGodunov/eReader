@@ -6,12 +6,40 @@ body{
     margin: 0;
 }
 
-#resource{
-    display: none;
-}
-
 .view{
+    position: absolute;
+    top: 0;
     width: 320px;
     height: 480px;
-    border: 1px solid #000;
+    opacity: 0;
+}
+
+.slider{
+    padding: 0;
+    margin: 0;
+}
+
+.slider-item{
+    padding: 0;
+    margin: 0;
+}
+
+.pages-number{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 10px;
+}
+
+.bx-wrapper{
+    width: 320px;
+    height: 480px;
+}
+
+.bx-wrapper .bx-prev{
+    left: -50px;
+}
+
+.bx-wrapper .bx-next{
+    right: -50px;
 }

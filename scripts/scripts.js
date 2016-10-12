@@ -1,11 +1,46 @@
 var app = (function ($) {
     "use strict";
 
-    var resourceHtml = $('#resource').html(),
-        htmlView = $('#view').html(resourceHtml).find('*'),
-        pages = [];
+    var pages = [],
+        slider;
 
-    var savePage = function (html) {
+    var onchangePagesIndex = function (currentPageIndex) {
+        var currentPage = currentPageIndex + 1 || 1,
+            pagesCount = $('.slider-item').size(),
+            $pagesNumber = $('.pages-number');
+
+        if (!$pagesNumber.length) {
+            $('.bx-wrapper').append('<div class="pages-number">' + currentPage + '/' + pagesCount);
+        }
+
+        $pagesNumber.text(currentPage + '/' + pagesCount);
+    };
+
+    var initSlider = function () {
+        slider = $('#slider').bxSlider({
+            infiniteLoop: false,
+            hideControlOnEnd: true,
+
+            onSliderLoad: function () {
+                onchangePagesIndex();
+            },
+
+            onSlideAfter: function ($slideElement, oldIndex, newIndex) {
+                onchangePagesIndex(newIndex);
+            }
+        });
+    };
+
+    var constructListOfPages = function () {
+        pages.forEach(function (item) {
+            $('#slider').append('<li class="slider-item">');
+            $('.slider-item:last-child').html(item);
+        });
+
+        initSlider();
+    };
+
+    var pageThread = function (html) {
         var htmlLength = html.length,
             currentElementOffsetTop, currentElementHeight;
 
@@ -15,35 +50,39 @@ var app = (function ($) {
 
             if (currentElementOffsetTop + currentElementHeight > 480) {
                 pages.push(html.slice(0, i));
-                htmlView = $('#view').html(html.slice(i)).find('*');
 
-                app.pageThread();
+                html = $('#view').html(html.slice(i)).find('*');
+
+                pageThread(html);
                 break;
             }
 
             if (i === htmlLength - 1) {
                 pages.push(html);
+
+                constructListOfPages();
                 break;
             }
         }
     };
 
-    return {
-        pageThread: function () {
-            savePage(htmlView);
-            console.log(pages);
-        },
+    var getDataSuccess = function (data) {
+        var htmlRendered = $('#view').html(data).find('*');
 
-        pagesShow: function () {
-            pages.forEach(function (item) {
-                $('body').append('<section class="view">');
-                $('.view:last-child').html(item);
+        pageThread(htmlRendered);
+    };
+
+    return {
+        getData: function () {
+            $.ajax({
+                url: 'data.html',
+                type: 'POST',
+                success: getDataSuccess
             });
         },
 
         init: function() {
-            app.pageThread();
-            app.pagesShow();
+            app.getData();
         }
 
     };
