@@ -42,55 +42,78 @@ var app = (function ($) {
     };
 
     var pageThread = function (html) {
+        // var htmlLength = html.length,
+        //     currentElementOffsetTop, currentElementHeight;
+        //
+        // for (var i=0; i<htmlLength; i++) {
+        //     currentElementOffsetTop = html.eq(i).offset().top;
+        //     currentElementHeight = html.eq(i).height();
+        //
+        //     if (currentElementOffsetTop + currentElementHeight > 480) {
+        //         pages.push(html.slice(0, i));
+        //
+        //         html = $('#view').html(html.slice(i)).find('*');
+        //
+        //         pageThread(html);
+        //         break;
+        //     }
+        //
+        //     if (i === htmlLength - 1) {
+        //         pages.push(html);
+        //
+        //         constructListOfPages();
+        //         break;
+        //     }
+        // }
+
         var htmlLength = html.length,
-            currentElementOffsetTop, currentElementHeight;
+            i = 0, nextIterationStart = 0,
+            lastElementOffsetBottom = html[htmlLength - 1].offsetTop + html[htmlLength - 1].offsetHeight;
+debugger;
+        while (lastElementOffsetBottom > 480) {
+            for (i; i < htmlLength; i++) {
+                var elementOffsetBottom = html[i].offsetTop + html[i].offsetHeight;
 
-        for (var i=0; i<htmlLength; i++) {
-            currentElementOffsetTop = html.eq(i).offset().top;
-            currentElementHeight = html.eq(i).height();
-            // currentElementOffsetTop = html[i].offsetTop;
-            // currentElementHeight = html[i].offsetHeight;
+                if (elementOffsetBottom > 480) {
+                    var previousElementOffsetBottom = html[i - 1].offsetTop + html[i - 1].offsetHeight;
 
-            if (currentElementOffsetTop + currentElementHeight > 480) {
-                pages.push(html.slice(0, i));
-                // pages.push(Array.prototype.slice.call(html, 0, i));
+                    pages.push(Array.prototype.slice.call(html, nextIterationStart, i));
 
-                html = $('#view').html(html.slice(i)).find('*');
-            //     var htmlRestCollection = Array.prototype.slice.call(html, i);
-            //     var htmlRestCollectionLength = htmlRestCollection.length;
-            //     var htmlRest = '';
-            //     for (var j=0; j<htmlRestCollectionLength; j++) {
-            //         htmlRest += htmlRestCollection[j].innerHTML;
-            //     }
-            //     document.getElementById('view').insertAdjacentHTML('afterBegin', htmlRest);
-            //     html = document.getElementById('view').getElementsByTagName('*');
-            // console.log(html);break;
+                    html[0].style.marginTop = '-' + previousElementOffsetBottom + 'px';
+                    html[i].style.marginBottom = 0;
 
-                pageThread(html);
-                break;
-            }
-
-            if (i === htmlLength - 1) {
-                pages.push(html);
-
-                constructListOfPages();
-                break;
+                    nextIterationStart = i;
+                    lastElementOffsetBottom -= previousElementOffsetBottom;
+                }
             }
         }
+
+        pages.push(Array.prototype.slice.call(html, nextIterationStart, htmlLength - 1));
+
+        console.log(pages);
+    };
+
+    var refreshWidthContainers = function () {
+        $('#view').find('.body').each(function () {
+            var lastChild = $(this).children().last();
+            var newWidth = lastChild.position().left - $(this).position().left + lastChild.outerWidth(true);
+            $(this).width(newWidth);
+        });
     };
 
     var getDataSuccess = function (data) {
-        var htmlRendered = $('#view').html(data).find('*');
-        // document.getElementById('view').innerHTML = data;
-        // var htmlRendered = document.getElementById('view').getElementsByTagName('*');
+        // var htmlRendered = $('#view').html(data).find('*');
+        document.getElementById('view').innerHTML = data;
+        var htmlRendered = document.getElementById('view').querySelectorAll('*');
 
-        pageThread(htmlRendered);
+        // pageThread(htmlRendered);
+
+        refreshWidthContainers();
     };
-
     return {
         getData: function () {
             $.ajax({
-                url: 'data_light.html',
+                url: 'data.html',
                 type: 'POST',
                 success: getDataSuccess
             });
