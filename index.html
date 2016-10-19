@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
     <title>eReader</title>
-    <link rel="stylesheet" href="node_modules/bxslider/dist/jquery.bxslider.min.css">
+    <!--<link rel="stylesheet" href="node_modules/bxslider/dist/jquery.bxslider.min.css">-->
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <section id="view" class="view"></section>
+    <section class="ereader">
+        <div class="view-wrap">
+            <div id="view" class="view"></div>
+        </div>
+        <button id="prevPage" class="controls controls__prev"><</button>
+        <button id="nextPage" class="controls controls__next">></button>
+    </section>
 
-    <ul id="slider" class="slider"></ul>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/bxslider/dist/jquery.bxslider.min.js"></script>
+    <!--<script src="node_modules/bxslider/dist/jquery.bxslider.min.js"></script>-->
     <script src="scripts/scripts.js"></script>
 </body>
 </html>

@@ -1,67 +1,30 @@
-/**{*/
-    /*box-sizing: border-box;*/
-/*}*/
-
 body{
     margin: 0;
 }
 
-/*.view{*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*width: 320px;*/
-    /*height: 480px;*/
-    /*opacity: 0;*/
-/*}*/
+.ereader{
+    position: relative;
+    width: 320px;
+    height: 480px;
+    margin: 0 auto;
+    border: 1px solid #000;
+    box-sizing: content-box;
+}
 
-/*.view *{*/
-    /*width: 320px;*/
-/*}*/
+.view-wrap{
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
 
-/*.slider{*/
-    /*padding: 0;*/
-    /*margin: 0;*/
-/*}*/
-
-/*.slider-item{*/
-    /*padding: 0;*/
-    /*margin: 0;*/
-
-    /*!* Test without slider*!*/
-    /*display: inline-block;*/
-    /*vertical-align: top;*/
-    /*width: 320px;*/
-    /*height: 480px;*/
-    /*border: 1px solid #000;*/
-/*}*/
-
-/*.pages-number{*/
-    /*position: absolute;*/
-    /*bottom: 5px;*/
-    /*right: 5px;*/
-    /*font-size: 10px;*/
-/*}*/
-
-/*.bx-wrapper{*/
-    /*width: 320px;*/
-    /*height: 480px;*/
-/*}*/
-
-/*.bx-wrapper .bx-prev{*/
-    /*left: -50px;*/
-/*}*/
-
-/*.bx-wrapper .bx-next{*/
-    /*right: -50px;*/
-/*}*/
-
-/* Flex*/
 .view{
+    position: absolute;
+    left: 0;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    height: 480px;
-    border-bottom: 1px solid #000;
+    height: 100%;
+    transition: left .3s;
 }
 
 .view .body{
@@ -72,4 +35,20 @@ body{
 
 .view .body *{
     width: 320px;
+}
+
+.controls{
+    position: absolute;
+    top: 100%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+}
+
+.controls__prev{
+    left: 0;
+}
+
+.controls__next{
+    right: 0;
 }
