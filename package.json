@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "bxslider": "^4.2.6",
     "jquery": "^1.11.1"
   }
 }

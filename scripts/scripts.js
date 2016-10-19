@@ -5,15 +5,28 @@ var app = (function ($) {
 
     };
 
-    var slider = function () {
-        var $view = $('#view');
+    var slider = function (widthAll) {
+        var $view = $('#view'),
+            indexOfPage = 1,
+            countOfPages = widthAll / 320,
+            $countPages = $('#countPages');
+
+        $countPages.text(indexOfPage + '/' + countOfPages);
 
         $('#prevPage').on('click', function () {
-            $view.css({left: '-=320'})
+            if (indexOfPage > 1) {
+                $view.css({left: '+=320'});
+                indexOfPage--;
+                $countPages.text(indexOfPage + '/' + countOfPages);
+            }
         });
 
         $('#nextPage').on('click', function () {
-            $view.css({left: '+=320'})
+            if (indexOfPage < countOfPages) {
+                $view.css({left: '-=320'});
+                indexOfPage++;
+                $countPages.text(indexOfPage + '/' + countOfPages);
+            }
         });
 
 
@@ -21,13 +34,17 @@ var app = (function ($) {
     };
 
     var refreshWidthContainers = function () {
+        var widthAll = 0;
+
         $('#view').find('.body').each(function () {
             var lastChild = $(this).children().last();
             var newWidth = lastChild.position().left - $(this).position().left + lastChild.outerWidth(true);
             $(this).width(newWidth);
+
+            widthAll += newWidth;
         });
 
-        slider();
+        slider(widthAll);
     };
 
     var getDataSuccess = function (data) {
