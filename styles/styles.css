@@ -66,10 +66,10 @@ html{
  * Preparation to build pages
  */
 .view-container{
-    /*position: absolute;*/
+    position: absolute;
     width: 320px;
     height: 480px;
-    /*opacity: 0;*/
+    opacity: 0;
 }
 
 .view-wrap{
@@ -137,11 +137,18 @@ html{
     height: 480px;
     background: #fff;
     opacity: 0;
+    will-change: transform, opacity;
 
     /* Show all pages */
     /*display: inline-block;*/
     /*vertical-align: top;*/
     /*box-shadow: inset 0 0 0 1px #000;*/
+}
+
+.page img{
+    max-width: 100%;
+    height: auto;
+    width: auto !important;
 }
 
 .page.active{
@@ -185,10 +192,10 @@ html{
 
 @keyframes next {
     0% {
-        left: 0;
+        transform: translateX(0);
     }
     100% {
-        left: -320px;
+        transform: translateX(-100%);
     }
 }
 
@@ -200,10 +207,10 @@ html{
 
 @keyframes prev {
     0% {
-        left: -320px;
+        transform: translateX(-100%);
     }
     100% {
-        left: 0;
+        transform: translateX(0);
     }
 }
 
