@@ -49,21 +49,32 @@ table {
     box-sizing: border-box;
 }
 
+html{
+    font-size: 16px;
+}
+
+/**
+ * Fonts
+ */
+@font-face {
+    font-family: "Wingdings";
+    src: url('../OPS/fonts/Wingdings.ttf') format(truetype);
+}
 
 
-.ereader{
-    position: relative;
+/**
+ * Preparation to build pages
+ */
+.view-container{
+    /*position: absolute;*/
     width: 320px;
     height: 480px;
-    margin: 0 auto;
-    border: 1px solid #000;
-    box-sizing: content-box;
+    /*opacity: 0;*/
 }
 
 .view-wrap{
     position: relative;
     height: 100%;
-    overflow: hidden;
 }
 
 .view{
@@ -73,13 +84,16 @@ table {
     flex-direction: column;
     flex-wrap: wrap;
     height: 100%;
-    transition: left .1s;
 }
 
 .view .body{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    white-space: normal !important;
+
+    /* Show boundaries of chapters*/
+    box-shadow: inset 0 0 0 1px #000;
 }
 
 .view .body *{
@@ -89,6 +103,112 @@ table {
 .view .body table *{
     word-break: break-all;
     width: auto !important;
+}
+
+.view .body img{
+    max-width: 100%;
+    height: auto;
+    width: auto !important;
+}
+
+/**
+ * List of pages
+ */
+.page-container{
+    position: relative;
+    width: 320px;
+    height: 480px;
+    margin: 0 auto;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.pages{
+    position: relative;
+    width: 320px;
+    height: 480px;
+    overflow: hidden;
+}
+
+.page{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 480px;
+    background: #fff;
+    opacity: 0;
+
+    /* Show all pages */
+    /*display: inline-block;*/
+    /*vertical-align: top;*/
+    /*box-shadow: inset 0 0 0 1px #000;*/
+}
+
+.page.active{
+    z-index: 3;
+    opacity: 1;
+}
+
+.page.appearance{
+    animation: appearance .5s;
+}
+
+@keyframes appearance {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.page.disappearance{
+    animation: disappearance .5s;
+}
+
+@keyframes disappearance {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+}
+
+.page.next{
+    animation: next .5s;
+}
+
+@keyframes next {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: -320px;
+    }
+}
+
+.page.prev{
+    opacity: 1;
+    z-index: 4;
+    animation: prev .5s;
+}
+
+@keyframes prev {
+    0% {
+        left: -320px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+.page *{
+    width: 320px !important;
 }
 
 .controls{

@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
     <title>eReader</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="OPS/css/book.css">
 </head>
 <body>
-    <section class="ereader">
+    <section class="view-container">
         <div class="view-wrap">
             <div id="view" class="view"></div>
         </div>
+    </section>
+
+    <section class="page-container">
+        <ul id="pages" class="pages"></ul>
+
         <button id="prevPage" class="controls controls__prev"><</button>
         <button id="nextPage" class="controls controls__next">></button>
         <p id="countPages" class="count-pages"></p>
