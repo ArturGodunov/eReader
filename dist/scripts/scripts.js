@@ -2,6 +2,11 @@ var app = (function ($) {
     "use strict";
 
     /**
+     * Start or end animation of pages
+     * */
+    var statusAnimation = 'end';
+
+    /**
      * Delete loader
      * */
     var deleteLoader = function () {
@@ -23,12 +28,16 @@ var app = (function ($) {
         $page.filter('.active').addClass(nextDisappearance);
 
         $page.filter('.' + nextDisappearance).on('animationstart', function () {
+            statusAnimation = 'start';
+
             $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
         });
 
         $page.filter('.' + nextDisappearance).on('animationend', function () {
             $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass(prevAppearance);
             $(this).removeClass('active ' + nextDisappearance);
+
+            statusAnimation = 'end';
         });
     };
 
@@ -44,7 +53,7 @@ var app = (function ($) {
         $countPages.text(indexOfPage + '/' + countOfPages);
 
         $('#prevPage').on('click', function () {
-            if (indexOfPage > 1) {
+            if (indexOfPage > 1 && statusAnimation !== 'start') {
                 indexOfPage--;
 
                 animatePages(indexOfPage, $page, countOfPages, $countPages, 'disappearance', 'prev');
@@ -52,7 +61,7 @@ var app = (function ($) {
         });
 
         $('#nextPage').on('click', function () {
-            if (indexOfPage < countOfPages) {
+            if (indexOfPage < countOfPages && statusAnimation !== 'start') {
                 indexOfPage++;
 
                 animatePages(indexOfPage, $page, countOfPages, $countPages, 'next', 'appearance');
