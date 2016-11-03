@@ -16,8 +16,8 @@
 
 .count-pages{
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 14px;
+  font-size: 20px;
 }
