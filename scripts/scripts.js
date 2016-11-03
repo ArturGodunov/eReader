@@ -2,6 +2,13 @@ var app = (function ($) {
     "use strict";
 
     /**
+     * Delete loader
+     * */
+    var deleteLoader = function () {
+        $('#loader').remove();
+    };
+
+    /**
      * Build slider
      * */
     var slider = function () {
@@ -17,6 +24,9 @@ var app = (function ($) {
                 indexOfPage--;
                 $countPages.text(indexOfPage + '/' + countOfPages);
 
+                $page.removeClass('will-change');
+                $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
+
                 $page.off('animationstart animationend');
 
                 $page.filter('.active').addClass('disappearance');
@@ -26,7 +36,7 @@ var app = (function ($) {
                 });
 
                 $page.filter('.disappearance').on('animationend', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('active').removeClass('prev');
+                    $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass('prev');
                     $(this).removeClass('active disappearance');
                 });
             }
@@ -37,6 +47,9 @@ var app = (function ($) {
                 indexOfPage++;
                 $countPages.text(indexOfPage + '/' + countOfPages);
 
+                $page.removeClass('will-change');
+                $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
+
                 $page.off('animationstart animationend');
 
                 $page.filter('.active').addClass('next');
@@ -46,7 +59,7 @@ var app = (function ($) {
                 });
 
                 $page.filter('.next').on('animationend', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('active').removeClass('appearance');
+                    $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass('appearance');
                     $(this).removeClass('active next');
                 });
             }
@@ -66,6 +79,7 @@ var app = (function ($) {
      * */
     var buildList = function () {
         var allElements = $('#view').find('.body').children();
+        var allElementsLength = allElements.length;
         var left = 0;
         var lastIndex = 0;
 
@@ -82,16 +96,20 @@ var app = (function ($) {
                 insertPage(page);
             }
 
-            if (index === allElements.length - 1) {
+            if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
 
                 insertPage(page);
             }
         });
 
-        $('.page:last-child').addClass('active');
+        deleteLoader();
 
-        slider();
+        var $page = $('.page');
+
+        $page
+            .last().addClass('active will-change')
+            .prev().addClass('will-change');
     };
 
     /**
@@ -104,8 +122,6 @@ var app = (function ($) {
             var newWidth = lastChild.position().left - $(this).position().left + lastChild.outerWidth(true);
             $(this).width(newWidth);
         });
-
-        buildList();
     };
 
     /**
@@ -113,11 +129,20 @@ var app = (function ($) {
      * */
     var adaptationStyles = function () {
         $('#view').find('*').each(function () {
-            $(this).css({
-                'margin': $(this).css('margin'),
-                'padding': $(this).css('padding')
-            });
+            var margin = $(this).css('margin');
+            var padding = $(this).css('padding');
+
+            if (margin !== '0px') {
+                $(this).css('margin', margin);
+            }
+            if (padding !== '0px') {
+                $(this).css('padding', padding);
+            }
         });
+    };
+
+    var deleteSupportingSection = function () {
+        $('.view-container').remove();
     };
 
     /**
@@ -126,8 +151,14 @@ var app = (function ($) {
     var getDataSuccess = function (data) {
         $('#view').html(data).find('*');
 
+        /**
+         * Order of execution is important here
+         * */
         adaptationStyles();
         refreshWidthContainers();
+        buildList();
+        deleteSupportingSection();
+        slider();
     };
 
     /**
