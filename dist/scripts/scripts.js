@@ -22,6 +22,7 @@ var app = (function ($) {
 
         $page.removeClass('will-change');
         $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
+        $page.eq(countOfPages - indexOfPage + 1).addClass('will-change');
 
         $page.off('animationstart animationend');
 
