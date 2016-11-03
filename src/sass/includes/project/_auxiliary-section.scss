@@ -1,7 +1,7 @@
 .auxiliary{
   position: absolute;
-  width: 320px;
-  height: 480px;
+  width: $width;
+  height: $height;
   opacity: 0;
 }
 
@@ -28,18 +28,12 @@
     box-shadow: inset 0 0 0 1px #000;
 
     *{
-      width: 320px !important;
+      width: $width !important;
     }
 
-    table *{
-      word-break: break-all;
-      width: auto !important;
-    }
-
-    img{
-      max-width: 100%;
-      height: auto;
-      width: auto !important;
-    }
+    //table *{
+    //  word-break: break-all;
+    //  width: auto !important;
+    //}
   }
 }

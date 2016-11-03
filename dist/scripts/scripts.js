@@ -9,6 +9,30 @@ var app = (function ($) {
     };
 
     /**
+     * Add/remove css classes for animation and
+     * add handlers for start/end of animations
+     * */
+    var animatePages = function (indexOfPage, $page, countOfPages, $countPages, nextDisappearance, prevAppearance) {
+        $countPages.text(indexOfPage + '/' + countOfPages);
+
+        $page.removeClass('will-change');
+        $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
+
+        $page.off('animationstart animationend');
+
+        $page.filter('.active').addClass(nextDisappearance);
+
+        $page.filter('.' + nextDisappearance).on('animationstart', function () {
+            $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
+        });
+
+        $page.filter('.' + nextDisappearance).on('animationend', function () {
+            $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass(prevAppearance);
+            $(this).removeClass('active ' + nextDisappearance);
+        });
+    };
+
+    /**
      * Build slider
      * */
     var slider = function () {
@@ -22,46 +46,16 @@ var app = (function ($) {
         $('#prevPage').on('click', function () {
             if (indexOfPage > 1) {
                 indexOfPage--;
-                $countPages.text(indexOfPage + '/' + countOfPages);
 
-                $page.removeClass('will-change');
-                $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
-
-                $page.off('animationstart animationend');
-
-                $page.filter('.active').addClass('disappearance');
-
-                $page.filter('.disappearance').on('animationstart', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('prev');
-                });
-
-                $page.filter('.disappearance').on('animationend', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass('prev');
-                    $(this).removeClass('active disappearance');
-                });
+                animatePages(indexOfPage, $page, countOfPages, $countPages, 'disappearance', 'prev');
             }
         });
 
         $('#nextPage').on('click', function () {
             if (indexOfPage < countOfPages) {
                 indexOfPage++;
-                $countPages.text(indexOfPage + '/' + countOfPages);
 
-                $page.removeClass('will-change');
-                $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
-
-                $page.off('animationstart animationend');
-
-                $page.filter('.active').addClass('next');
-
-                $page.filter('.next').on('animationstart', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('appearance');
-                });
-
-                $page.filter('.next').on('animationend', function () {
-                    $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass('appearance');
-                    $(this).removeClass('active next');
-                });
+                animatePages(indexOfPage, $page, countOfPages, $countPages, 'next', 'appearance');
             }
         });
     };
