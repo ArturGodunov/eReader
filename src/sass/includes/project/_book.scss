@@ -1,0 +1,66 @@
+.book{
+  position: relative;
+  width: 320px;
+  height: 480px;
+  margin: 0 auto;
+  box-shadow: 0 0 0 1px #000;
+}
+
+.pages{
+  position: relative;
+  width: 320px;
+  height: 480px;
+  overflow: hidden;
+}
+
+.page{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 480px;
+  background: #fff;
+  opacity: 0;
+
+  /* Show all pages */
+  /*display: inline-block;*/
+  /*vertical-align: top;*/
+  /*box-shadow: inset 0 0 0 1px #000;*/
+
+  *{
+    width: 320px !important;
+  }
+
+  img{
+    max-width: 100%;
+    height: auto;
+    width: auto !important;
+  }
+
+  &.active{
+    z-index: 3;
+    opacity: 1;
+  }
+
+  &.will-change{
+    will-change: transform, opacity;
+  }
+
+  &.appearance{
+    animation: appearance .5s;
+  }
+
+  &.disappearance{
+    animation: disappearance .5s;
+  }
+
+  &.next{
+    animation: next .5s;
+  }
+
+  &.prev{
+    opacity: 1;
+    z-index: 4;
+    animation: prev .5s;
+  }
+}

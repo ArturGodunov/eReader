@@ -78,7 +78,7 @@ var app = (function ($) {
      * Build list of pages
      * */
     var buildList = function () {
-        var allElements = $('#view').find('.body').children();
+        var allElements = $('#auxiliary-view').find('.body').children();
         var allElementsLength = allElements.length;
         var left = 0;
         var lastIndex = 0;
@@ -117,7 +117,7 @@ var app = (function ($) {
      * @see http://stackoverflow.com/questions/23408539/how-can-i-make-a-displayflex-container-expand-horizontally-with-its-wrapped-con/26231447#26231447
      * */
     var refreshWidthContainers = function () {
-        $('#view').find('.body').each(function () {
+        $('#auxiliary-view').find('.body').each(function () {
             var lastChild = $(this).children().last();
             var newWidth = lastChild.position().left - $(this).position().left + lastChild.outerWidth(true);
             $(this).width(newWidth);
@@ -128,7 +128,7 @@ var app = (function ($) {
      * Change styles from ePub
      * */
     var adaptationStyles = function () {
-        $('#view').find('*').each(function () {
+        $('#auxiliary-view').find('*').each(function () {
             var margin = $(this).css('margin');
             var padding = $(this).css('padding');
 
@@ -142,14 +142,14 @@ var app = (function ($) {
     };
 
     var deleteSupportingSection = function () {
-        $('.view-container').remove();
+        $('#auxiliary').remove();
     };
 
     /**
      * Get data if success
      * */
     var getDataSuccess = function (data) {
-        $('#view').html(data).find('*');
+        $('#auxiliary-view').html(data).find('*');
 
         /**
          * Order of execution is important here

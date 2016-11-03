@@ -1,0 +1,245 @@
+/**
+ * Reset
+ */
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/**
+ * Base
+ */
+@font-face {
+  font-family: "Wingdings";
+  src: url("../OPS/fonts/Wingdings.ttf") format(truetype);
+}
+html {
+  font-size: 16px;
+}
+
+/**
+ * Project
+ */
+@keyframes appearance {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes disappearance {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+@keyframes next {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes prev {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.auxiliary {
+  position: absolute;
+  width: 320px;
+  height: 480px;
+  opacity: 0;
+}
+
+.auxiliary-wrap {
+  position: relative;
+  height: 100%;
+}
+
+.auxiliary-view {
+  position: absolute;
+  left: 0;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  height: 100%;
+}
+.auxiliary-view .body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  white-space: normal !important;
+  /* Show boundaries of chapters*/
+  box-shadow: inset 0 0 0 1px #000;
+}
+.auxiliary-view .body * {
+  width: 320px !important;
+}
+.auxiliary-view .body table * {
+  word-break: break-all;
+  width: auto !important;
+}
+.auxiliary-view .body img {
+  max-width: 100%;
+  height: auto;
+  width: auto !important;
+}
+
+.book {
+  position: relative;
+  width: 320px;
+  height: 480px;
+  margin: 0 auto;
+  box-shadow: 0 0 0 1px #000;
+}
+
+.pages {
+  position: relative;
+  width: 320px;
+  height: 480px;
+  overflow: hidden;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 480px;
+  background: #fff;
+  opacity: 0;
+  /* Show all pages */
+  /*display: inline-block;*/
+  /*vertical-align: top;*/
+  /*box-shadow: inset 0 0 0 1px #000;*/
+}
+.page * {
+  width: 320px !important;
+}
+.page img {
+  max-width: 100%;
+  height: auto;
+  width: auto !important;
+}
+.page.active {
+  z-index: 3;
+  opacity: 1;
+}
+.page.will-change {
+  will-change: transform, opacity;
+}
+.page.appearance {
+  animation: appearance .5s;
+}
+.page.disappearance {
+  animation: disappearance .5s;
+}
+.page.next {
+  animation: next .5s;
+}
+.page.prev {
+  opacity: 1;
+  z-index: 4;
+  animation: prev .5s;
+}
+
+.controls {
+  position: absolute;
+  top: 100%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.controls__prev {
+  left: 0;
+}
+
+.controls__next {
+  right: 0;
+}
+
+.count-pages {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+      transform: translateX(-50%);
+  font-size: 14px;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+  z-index: 5;
+}
