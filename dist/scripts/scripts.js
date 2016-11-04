@@ -20,19 +20,15 @@ var app = (function ($) {
     var animatePages = function (indexOfPage, $page, countOfPages, $countPages, nextDisappearance, prevAppearance) {
         $countPages.text(indexOfPage + '/' + countOfPages);
 
-        $page.removeClass('will-change');
-        $page.eq(countOfPages - indexOfPage - 1).addClass('will-change');
-        $page.eq(countOfPages - indexOfPage + 1).addClass('will-change');
-
         $page.off('animationstart animationend');
+
+        statusAnimation = 'start';
 
         $page.filter('.active').addClass(nextDisappearance);
         $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
 
-        statusAnimation = 'start';
-
         $page.filter('.' + nextDisappearance).on('animationend', function () {
-            $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass(prevAppearance);
+            $page.eq(countOfPages - indexOfPage).addClass('active').removeClass(prevAppearance);
             $(this).removeClass('active ' + nextDisappearance);
 
             statusAnimation = 'end';
@@ -108,9 +104,7 @@ var app = (function ($) {
 
         var $page = $('.page');
 
-        $page
-            .last().addClass('active will-change')
-            .prev().addClass('will-change');
+        $page.last().addClass('active');
     };
 
     /**
@@ -129,7 +123,7 @@ var app = (function ($) {
      * Change styles from ePub
      * */
     var adaptationStyles = function () {
-        $('#auxiliary-view').find('*').each(function () {
+        $('#auxiliary-view').find('.body').find('*').each(function () {
             var margin = $(this).css('margin');
             var padding = $(this).css('padding');
 

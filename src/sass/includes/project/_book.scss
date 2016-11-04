@@ -32,16 +32,17 @@
   }
 
   &.active{
+    will-change: transform, opacity;
     z-index: 3;
     opacity: 1;
   }
 
   &.will-change{
     will-change: transform, opacity;
-    //transform: translateZ(0);
   }
 
   &.appearance{
+    will-change: transform, opacity;
     animation: appearance .5s;
   }
 
@@ -54,6 +55,7 @@
   }
 
   &.prev{
+    will-change: transform;
     opacity: 1;
     z-index: 4;
     animation: prev .5s;

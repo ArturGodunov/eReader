@@ -239,6 +239,7 @@ img {
   width: 100vw !important;
 }
 .page.active {
+  will-change: transform, opacity;
   z-index: 3;
   opacity: 1;
 }
@@ -246,6 +247,7 @@ img {
   will-change: transform, opacity;
 }
 .page.appearance {
+  will-change: transform, opacity;
   -webkit-animation: appearance .5s;
           animation: appearance .5s;
 }
@@ -258,6 +260,7 @@ img {
           animation: next .5s;
 }
 .page.prev {
+  will-change: transform;
   opacity: 1;
   z-index: 4;
   -webkit-animation: prev .5s;
