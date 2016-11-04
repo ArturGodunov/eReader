@@ -27,12 +27,9 @@ var app = (function ($) {
         $page.off('animationstart animationend');
 
         $page.filter('.active').addClass(nextDisappearance);
+        $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
 
-        $page.filter('.' + nextDisappearance).on('animationstart', function () {
-            statusAnimation = 'start';
-
-            $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
-        });
+        statusAnimation = 'start';
 
         $page.filter('.' + nextDisappearance).on('animationend', function () {
             $page.eq(countOfPages - indexOfPage).addClass('active will-change').removeClass(prevAppearance);
