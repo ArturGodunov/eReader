@@ -121,19 +121,25 @@ var app = (function ($) {
 
     /**
      * Change styles from ePub
+     * Be careful, method cssText replace all styles
      * */
     var adaptationStyles = function () {
-        $('#auxiliary-view').find('.body').find('*').each(function () {
-            var margin = $(this).css('margin');
-            var padding = $(this).css('padding');
+        document
+            .getElementById('auxiliary-view')
+            .querySelectorAll('.body')
+            .forEach(function (item) {
+                item.querySelectorAll('*').forEach(function (subitem) {
+                    var margin = getComputedStyle(subitem).margin;
+                    var padding = getComputedStyle(subitem).padding;
 
-            if (margin !== '0px') {
-                $(this).css('margin', margin);
-            }
-            if (padding !== '0px') {
-                $(this).css('padding', padding);
-            }
-        });
+                    if (margin !== '0px') {
+                        subitem.style.cssText = 'margin: ' + margin + ';';
+                    }
+                    if (padding !== '0px') {
+                        subitem.style.cssText = 'padding: ' + padding + ';';
+                    }
+                });
+            });
     };
 
     var deleteSupportingSection = function () {
