@@ -7,9 +7,9 @@ var app = (function ($) {
     var statusAnimation = 'end';
 
     /**
-     * Delete loader
+     * Remove loader
      * */
-    var deleteLoader = function () {
+    var removeLoader = function () {
         $('#loader').remove();
     };
 
@@ -100,7 +100,7 @@ var app = (function ($) {
             }
         });
 
-        deleteLoader();
+        removeLoader();
 
         var $page = $('.page');
 
