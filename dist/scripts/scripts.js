@@ -142,7 +142,10 @@ var app = (function ($) {
             });
     };
 
-    var deleteSupportingSection = function () {
+    /**
+     * Removing supporting section which is no longer needed
+     * */
+    var removeSupportingSection = function () {
         var auxiliary = document.getElementById('auxiliary');
 
         document.body.removeChild(auxiliary);
@@ -160,7 +163,7 @@ var app = (function ($) {
         adaptationStyles();
         refreshWidthContainers();
         buildList();
-        deleteSupportingSection();
+        removeSupportingSection();
         slider();
     };
 
