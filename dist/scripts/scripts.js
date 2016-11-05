@@ -10,7 +10,9 @@ var app = (function ($) {
      * Remove loader
      * */
     var removeLoader = function () {
-        $('#loader').remove();
+        var loader = document.getElementById('loader');
+
+        document.getElementById('book').removeChild(loader);
     };
 
     /**
