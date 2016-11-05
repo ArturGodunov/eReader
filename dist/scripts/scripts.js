@@ -169,7 +169,7 @@ var app = (function ($) {
      * Get data if success
      * */
     var getDataSuccess = function (data) {
-        $('#auxiliary-view').html(data).find('*');
+        document.getElementById('auxiliary-view').innerHTML = data;
 
         /**
          * Order of execution is important here
