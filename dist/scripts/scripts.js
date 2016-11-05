@@ -143,7 +143,9 @@ var app = (function ($) {
     };
 
     var deleteSupportingSection = function () {
-        $('#auxiliary').remove();
+        var auxiliary = document.getElementById('auxiliary');
+
+        document.body.removeChild(auxiliary);
     };
 
     /**
