@@ -71,6 +71,12 @@ var app = (function ($) {
     var insertPage = function (page) {
         $('#pages').prepend('<li class="page"/>');
         page.clone().appendTo('.page:first-child');
+
+        // var page = document.createElement('li');
+        // var pages = document.getElementById('pages');
+        // page.className = 'page';
+        // page.innerHTML = pageBody;
+        // pages.insertBefore(page, pages.children[0]);
     };
 
     /**
@@ -114,11 +120,17 @@ var app = (function ($) {
      * @see http://stackoverflow.com/questions/23408539/how-can-i-make-a-displayflex-container-expand-horizontally-with-its-wrapped-con/26231447#26231447
      * */
     var refreshWidthContainers = function () {
-        $('#auxiliary-view').find('.body').each(function () {
-            var lastChild = $(this).children().last();
-            var newWidth = lastChild.position().left - $(this).position().left + lastChild.outerWidth(true);
-            $(this).width(newWidth);
-        });
+        document
+            .getElementById('auxiliary-view')
+            .querySelectorAll('.body')
+            .forEach(function (item) {
+                var lastChild = item.lastChild;
+                var newWidth = lastChild.offsetLeft - item.offsetLeft +
+                    lastChild.offsetWidth +
+                    parseFloat(getComputedStyle(lastChild).marginLeft) +
+                    parseFloat(getComputedStyle(lastChild).marginRight);
+                item.style.cssText = 'width: ' + newWidth + 'px;';
+            });
     };
 
     /**
@@ -184,11 +196,7 @@ var app = (function ($) {
             if (xhr.status != 200) {
                 alert(xhr.status + ':' + xhr.statusText);
             } else {
-                try {
-                    getDataSuccess(xhr.responseText);
-                } catch (e) {
-                    alert('Incorrect answer:' + e.message);
-                }
+                getDataSuccess(xhr.responseText);
             }
         }
     };

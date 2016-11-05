@@ -62,6 +62,13 @@ table {
   font-family: "Wingdings";
   src: url("../OPS/fonts/Wingdings.ttf") format(truetype);
 }
+* {
+  box-sizing: border-box;
+}
+*:before, *:after {
+  box-sizing: border-box;
+}
+
 html {
   font-size: 16px;
 }
@@ -231,9 +238,6 @@ img {
   background: #fff;
   opacity: 0;
   /* Show all pages */
-  /*display: inline-block;*/
-  /*vertical-align: top;*/
-  /*box-shadow: inset 0 0 0 1px #000;*/
 }
 .page * {
   width: 100vw !important;
