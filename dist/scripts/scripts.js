@@ -171,11 +171,24 @@ var app = (function ($) {
      * Request of data
      * */
     var getData = function () {
-        $.ajax({
-            url: 'data.html',
-            type: 'POST',
-            success: getDataSuccess
-        });
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'data.html', true);
+        xhr.send();
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState != 4) return;
+
+            if (xhr.status != 200) {
+                alert(xhr.status + ':' + xhr.statusText);
+            } else {
+                try {
+                    getDataSuccess(xhr.responseText);
+                } catch (e) {
+                    alert('Incorrect answer:' + e.message);
+                }
+            }
+        }
     };
 
     return {
