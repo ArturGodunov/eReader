@@ -68,28 +68,47 @@ var app = (function ($) {
     /**
      * Inserting page into list of pages
      * */
-    var insertPage = function (page) {
-        $('#pages').prepend('<li class="page"/>');
-        page.clone().appendTo('.page:first-child');
+    var insertPage = function (pageBody) {
+        var pages = document.getElementById('pages');
+        var page = document.createElement('li');
 
-        // var page = document.createElement('li');
-        // var pages = document.getElementById('pages');
-        // page.className = 'page';
-        // page.innerHTML = pageBody;
-        // pages.insertBefore(page, pages.children[0]);
+        page.className = 'page';
+
+        var pageBodyToString = '';
+
+        pageBody.forEach(function (item) {
+            pageBodyToString += item.outerHTML;
+        });
+        page.innerHTML = pageBodyToString;
+
+        pages.insertBefore(page, pages.children[0]);
     };
 
     /**
      * Build list of pages
      * */
     var buildList = function () {
-        var allElements = $('#auxiliary-view').find('.body').children();
+        var allElements = [];
+
+        document
+            .getElementById('auxiliary-view')
+            .querySelectorAll('.body')
+            .forEach(function (item) {
+                var itemChildren = item.children;
+                var itemChildrenLength = itemChildren.length;
+                var i;
+
+                for(i=0; i<itemChildrenLength; i++) {
+                    allElements.push(itemChildren[i]);
+                }
+            });
+
         var allElementsLength = allElements.length;
         var left = 0;
         var lastIndex = 0;
 
-        allElements.each(function (index) {
-            var offsetLeft = $(this).offset().left;
+        allElements.forEach(function (item, index) {
+            var offsetLeft = item.offsetLeft;
             var page;
 
             if (offsetLeft !== left) {
@@ -110,9 +129,7 @@ var app = (function ($) {
 
         removeLoader();
 
-        var $page = $('.page');
-
-        $page.last().addClass('active');
+        document.getElementById('pages').lastChild.classList.add('active');
     };
 
     /**
