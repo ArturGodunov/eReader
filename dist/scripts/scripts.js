@@ -19,22 +19,36 @@ var app = (function ($) {
      * Add/remove css classes for animation and
      * add handlers for start/end of animations
      * */
-    var animatePages = function (indexOfPage, $page, countOfPages, $countPages, nextDisappearance, prevAppearance) {
-        $countPages.text(indexOfPage + '/' + countOfPages);
-
-        $page.off('animationstart animationend');
+    var animatePages = function (indexOfPage, pages, countOfPages, countOfPagesIndicator, nextDisappearance, prevAppearance) {
+        countOfPagesIndicator.innerHTML = indexOfPage + '/' + countOfPages;
 
         statusAnimation = 'start';
 
-        $page.filter('.active').addClass(nextDisappearance);
-        $page.eq(countOfPages - indexOfPage).addClass(prevAppearance);
+        pages.forEach(function (item) {
+            if (item.classList.contains('active')) {
+                item.classList.add(nextDisappearance);
+                pages[countOfPages - indexOfPage].classList.add(prevAppearance);
+            }
+        });
 
-        $page.filter('.' + nextDisappearance).on('animationend', function () {
-            $page.eq(countOfPages - indexOfPage).addClass('active').removeClass(prevAppearance);
-            $(this).removeClass('active ' + nextDisappearance);
+        var pageNextDisappearance;
+        pages.forEach(function (item) {
+            if (item.classList.contains(nextDisappearance)) {
+                pageNextDisappearance = item;
+                pageNextDisappearance.addEventListener('animationend', pageNextDisappearanceAnimationEnd);
+            }
+        });
+        function pageNextDisappearanceAnimationEnd() {
+            pageNextDisappearance.classList.remove('active', nextDisappearance);
+            pages[countOfPages - indexOfPage].classList.add('active');
+            pages[countOfPages - indexOfPage].classList.remove(prevAppearance);
 
             statusAnimation = 'end';
-        });
+
+            pages.forEach(function (item) {
+                item.removeEventListener('animationend', pageNextDisappearanceAnimationEnd);
+            });
+        }
     };
 
     /**
@@ -42,25 +56,25 @@ var app = (function ($) {
      * */
     var slider = function () {
         var indexOfPage = 1;
-        var $page = $('.page');
-        var countOfPages = $page.length;
-        var $countPages = $('#countPages');
+        var pages = document.querySelectorAll('.page');
+        var countOfPages = pages.length;
+        var countOfPagesIndicator = document.getElementById('countPages');
 
-        $countPages.text(indexOfPage + '/' + countOfPages);
+        countOfPagesIndicator.innerHTML = indexOfPage + '/' + countOfPages;
 
-        $('#prevPage').on('click', function () {
+        document.getElementById('prevPage').addEventListener('click', function () {
             if (indexOfPage > 1 && statusAnimation !== 'start') {
                 indexOfPage--;
 
-                animatePages(indexOfPage, $page, countOfPages, $countPages, 'disappearance', 'prev');
+                animatePages(indexOfPage, pages, countOfPages, countOfPagesIndicator, 'disappearance', 'prev');
             }
         });
 
-        $('#nextPage').on('click', function () {
+        document.getElementById('nextPage').addEventListener('click', function () {
             if (indexOfPage < countOfPages && statusAnimation !== 'start') {
                 indexOfPage++;
 
-                animatePages(indexOfPage, $page, countOfPages, $countPages, 'next', 'appearance');
+                animatePages(indexOfPage, pages, countOfPages, countOfPagesIndicator, 'next', 'appearance');
             }
         });
     };
@@ -233,4 +247,4 @@ var app = (function ($) {
 /**
  * Document ready
  * */
-document.addEventListener("DOMContentLoaded", app.init);
+document.addEventListener("DOMContentLoaded", app.init, false);
