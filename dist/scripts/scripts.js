@@ -247,4 +247,4 @@ var app = (function ($) {
 /**
  * Document ready
  * */
-document.addEventListener("DOMContentLoaded", app.init, false);
+document.addEventListener("DOMContentLoaded", app.init);

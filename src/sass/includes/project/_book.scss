@@ -43,7 +43,7 @@
 
   &.appearance{
     will-change: transform, opacity;
-    animation: appearance .5s;
+    animation: appearance .4s .1s;
   }
 
   &.disappearance{
