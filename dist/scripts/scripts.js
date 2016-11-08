@@ -1,10 +1,9 @@
 var app = (function ($) {
     "use strict";
 
-    /**
-     * Start or end animation of pages
-     * */
+    /** Auxiliary bodies elements */
     var auxiliaryBodies;
+    /** Start or end animation of pages */
     var statusAnimation = 'end';
 
     /**
