@@ -197,6 +197,33 @@ var app = (function ($) {
     };
 
     /**
+     * Build start html
+     * */
+    var buildStartHtml = function () {
+        /** Section auxiliary */
+        var sectionAuxiliary = document.createElement('section');
+        sectionAuxiliary.id = 'auxiliary';
+        sectionAuxiliary.className = 'auxiliary';
+        sectionAuxiliary.innerHTML =
+            '<div class="auxiliary-wrap"><div id="auxiliary-view" class="auxiliary-view"></div></div>';
+
+        document.body.appendChild(sectionAuxiliary);
+
+        /** Section book */
+        var sectionBook = document.createElement('section');
+        sectionBook.id = 'book';
+        sectionBook.className = 'book';
+        sectionBook.innerHTML =
+            '<ul id="pages" class="pages"></ul>' +
+            '<button type="button" id="prevPage" class="controls controls__prev"><</button>' +
+            '<button type="button" id="nextPage" class="controls controls__next">></button>' +
+            '<p id="countPages" class="count-pages"></p>' +
+            '<p id="loader" class="loader"></p>';
+
+        document.body.appendChild(sectionBook);
+    };
+
+    /**
      * Get data if success
      * */
     var getDataSuccess = function (data) {
@@ -237,6 +264,7 @@ var app = (function ($) {
          * Initialization
          * */
         init: function() {
+            buildStartHtml();
             getData();
         }
 
