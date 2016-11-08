@@ -37,7 +37,7 @@ var app = (function ($) {
 
         statusAnimation = 'start';
 
-        pages.forEach(function (item) {
+        forEachNodeList(pages, function (item) {
             if (item.classList.contains('active')) {
                 item.classList.add(nextDisappearance);
                 pages[countOfPages - indexOfPage].classList.add(prevAppearance);
@@ -45,7 +45,7 @@ var app = (function ($) {
         });
 
         var pageNextDisappearance;
-        pages.forEach(function (item) {
+        forEachNodeList(pages, function (item) {
             if (item.classList.contains(nextDisappearance)) {
                 pageNextDisappearance = item;
                 pageNextDisappearance.addEventListener('animationend', pageNextDisappearanceAnimationEnd);
@@ -58,7 +58,7 @@ var app = (function ($) {
 
             statusAnimation = 'end';
 
-            pages.forEach(function (item) {
+            forEachNodeList(pages, function (item) {
                 item.removeEventListener('animationend', pageNextDisappearanceAnimationEnd);
             });
         }
