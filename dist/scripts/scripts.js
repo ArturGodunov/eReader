@@ -4,6 +4,7 @@ var app = (function ($) {
     /**
      * Start or end animation of pages
      * */
+    var auxiliaryBodies;
     var statusAnimation = 'end';
 
     /**
@@ -116,9 +117,7 @@ var app = (function ($) {
     var buildList = function () {
         var allElements = [];
 
-        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-
-        forEachNodeList(bodies, function (item) {
+        forEachNodeList(auxiliaryBodies, function (item) {
             var itemChildren = item.children;
 
             forEachNodeList(itemChildren, function (subitem) {
@@ -136,13 +135,16 @@ var app = (function ($) {
 
             if (offsetLeft !== left) {
                 page = allElements.slice(lastIndex, index);
+
                 left = offsetLeft;
                 lastIndex = index;
+
                 insertPage(page);
             }
 
             if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
+
                 insertPage(page);
             }
         });
@@ -157,9 +159,7 @@ var app = (function ($) {
      * @see http://stackoverflow.com/questions/23408539/how-can-i-make-a-displayflex-container-expand-horizontally-with-its-wrapped-con/26231447#26231447
      * */
     var refreshWidthContainers = function () {
-        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-
-        forEachNodeList(bodies, function (item) {
+        forEachNodeList(auxiliaryBodies, function (item) {
             var lastChild = item.lastChild;
             var newWidth = lastChild.offsetLeft - item.offsetLeft +
                 lastChild.offsetWidth +
@@ -174,9 +174,7 @@ var app = (function ($) {
      * Be careful, method cssText replace all styles
      * */
     var adaptationStyles = function () {
-        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-
-        forEachNodeList(bodies, function (item) {
+        forEachNodeList(auxiliaryBodies, function (item) {
             var items = item.querySelectorAll('*');
 
             forEachNodeList(items, function (subitem) {
@@ -235,6 +233,7 @@ var app = (function ($) {
      * */
     var getDataSuccess = function (data) {
         document.getElementById('auxiliary-view').innerHTML = data;
+        auxiliaryBodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
 
         /**
          * Order of execution is important here
