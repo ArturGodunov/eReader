@@ -7,6 +7,18 @@ var app = (function ($) {
     var statusAnimation = 'end';
 
     /**
+     * Custom method forEach
+     * */
+    var forEachNodeList = function (arr, callback, scope) {
+        var arrLength = arr.length;
+        var i;
+
+        for (i=0; i<arrLength; i++) {
+            callback.call(scope, arr[i]);
+        }
+    };
+
+    /**
      * Remove loader
      * */
     var removeLoader = function () {
@@ -105,18 +117,14 @@ var app = (function ($) {
         var allElements = [];
 
         var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-        var bodiesLength = bodies.length;
-        var i;
 
-        for (i=0; i<bodiesLength; i++) {
-            var itemChildren = bodies[i].children;
-            var itemChildrenLength = itemChildren.length;
-            var j;
+        forEachNodeList(bodies, function (item) {
+            var itemChildren = item.children;
 
-            for(j=0; j<itemChildrenLength; j++) {
-                allElements.push(itemChildren[j]);
-            }
-        }
+            forEachNodeList(itemChildren, function (subitem) {
+                allElements.push(subitem);
+            });
+        });
 
         var allElementsLength = allElements.length;
         var left = 0;
@@ -150,17 +158,15 @@ var app = (function ($) {
      * */
     var refreshWidthContainers = function () {
         var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-        var bodiesLength = bodies.length;
-        var i;
 
-        for (i=0; i<bodiesLength; i++) {
-            var lastChild = bodies[i].lastChild;
-            var newWidth = lastChild.offsetLeft - bodies[i].offsetLeft +
+        forEachNodeList(bodies, function (item) {
+            var lastChild = item.lastChild;
+            var newWidth = lastChild.offsetLeft - item.offsetLeft +
                 lastChild.offsetWidth +
                 parseFloat(getComputedStyle(lastChild).marginLeft) +
                 parseFloat(getComputedStyle(lastChild).marginRight);
-            bodies[i].style.cssText = 'width: ' + newWidth + 'px;';
-        }
+            item.style.cssText = 'width: ' + newWidth + 'px;';
+        });
     };
 
     /**
@@ -169,26 +175,23 @@ var app = (function ($) {
      * */
     var adaptationStyles = function () {
         var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
-        var bodiesLength = bodies.length;
-        var i;
 
-        for (i=0; i<bodiesLength; i++) {
-            var items = bodies[i].querySelectorAll('*');
-            var itemsLength = items.length;
-            var j;
+        forEachNodeList(bodies, function (item) {
+            var items = item.querySelectorAll('*');
 
-            for (j=0; j<itemsLength; j++) {
-                var margin = getComputedStyle(items[j]).margin;
-                var padding = getComputedStyle(items[j]).padding;
+            forEachNodeList(items, function (subitem) {
+                var margin = getComputedStyle(subitem).margin;
+                var padding = getComputedStyle(subitem).padding;
 
                 if (margin !== '0px') {
-                    items[j].style.cssText = 'margin: ' + margin + ';';
+                    subitem.style.cssText = 'margin: ' + margin + ';';
                 }
+
                 if (padding !== '0px') {
-                    items[j].style.cssText = 'padding: ' + padding + ';';
+                    subitem.style.cssText = 'padding: ' + padding + ';';
                 }
-            }
-        }
+            });
+        });
     };
 
     /**
