@@ -104,18 +104,19 @@ var app = (function ($) {
     var buildList = function () {
         var allElements = [];
 
-        document
-            .getElementById('auxiliary-view')
-            .querySelectorAll('.body')
-            .forEach(function (item) {
-                var itemChildren = item.children;
-                var itemChildrenLength = itemChildren.length;
-                var i;
+        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
+        var bodiesLength = bodies.length;
+        var i;
 
-                for(i=0; i<itemChildrenLength; i++) {
-                    allElements.push(itemChildren[i]);
-                }
-            });
+        for (i=0; i<bodiesLength; i++) {
+            var itemChildren = bodies[i].children;
+            var itemChildrenLength = itemChildren.length;
+            var j;
+
+            for(j=0; j<itemChildrenLength; j++) {
+                allElements.push(itemChildren[j]);
+            }
+        }
 
         var allElementsLength = allElements.length;
         var left = 0;
@@ -127,16 +128,13 @@ var app = (function ($) {
 
             if (offsetLeft !== left) {
                 page = allElements.slice(lastIndex, index);
-
                 left = offsetLeft;
                 lastIndex = index;
-
                 insertPage(page);
             }
 
             if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
-
                 insertPage(page);
             }
         });
@@ -151,17 +149,18 @@ var app = (function ($) {
      * @see http://stackoverflow.com/questions/23408539/how-can-i-make-a-displayflex-container-expand-horizontally-with-its-wrapped-con/26231447#26231447
      * */
     var refreshWidthContainers = function () {
-        document
-            .getElementById('auxiliary-view')
-            .querySelectorAll('.body')
-            .forEach(function (item) {
-                var lastChild = item.lastChild;
-                var newWidth = lastChild.offsetLeft - item.offsetLeft +
-                    lastChild.offsetWidth +
-                    parseFloat(getComputedStyle(lastChild).marginLeft) +
-                    parseFloat(getComputedStyle(lastChild).marginRight);
-                item.style.cssText = 'width: ' + newWidth + 'px;';
-            });
+        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
+        var bodiesLength = bodies.length;
+        var i;
+
+        for (i=0; i<bodiesLength; i++) {
+            var lastChild = bodies[i].lastChild;
+            var newWidth = lastChild.offsetLeft - bodies[i].offsetLeft +
+                lastChild.offsetWidth +
+                parseFloat(getComputedStyle(lastChild).marginLeft) +
+                parseFloat(getComputedStyle(lastChild).marginRight);
+            bodies[i].style.cssText = 'width: ' + newWidth + 'px;';
+        }
     };
 
     /**
@@ -169,22 +168,27 @@ var app = (function ($) {
      * Be careful, method cssText replace all styles
      * */
     var adaptationStyles = function () {
-        document
-            .getElementById('auxiliary-view')
-            .querySelectorAll('.body')
-            .forEach(function (item) {
-                item.querySelectorAll('*').forEach(function (subitem) {
-                    var margin = getComputedStyle(subitem).margin;
-                    var padding = getComputedStyle(subitem).padding;
+        var bodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
+        var bodiesLength = bodies.length;
+        var i;
 
-                    if (margin !== '0px') {
-                        subitem.style.cssText = 'margin: ' + margin + ';';
-                    }
-                    if (padding !== '0px') {
-                        subitem.style.cssText = 'padding: ' + padding + ';';
-                    }
-                });
-            });
+        for (i=0; i<bodiesLength; i++) {
+            var items = bodies[i].querySelectorAll('*');
+            var itemsLength = items.length;
+            var j;
+
+            for (j=0; j<itemsLength; j++) {
+                var margin = getComputedStyle(items[j]).margin;
+                var padding = getComputedStyle(items[j]).padding;
+
+                if (margin !== '0px') {
+                    items[j].style.cssText = 'margin: ' + margin + ';';
+                }
+                if (padding !== '0px') {
+                    items[j].style.cssText = 'padding: ' + padding + ';';
+                }
+            }
+        }
     };
 
     /**
@@ -245,7 +249,7 @@ var app = (function ($) {
     var getData = function () {
         var xhr = new XMLHttpRequest();
 
-        xhr.open('POST', 'data.html', true);
+        xhr.open('GET', 'data.html', true);
         xhr.send();
 
         xhr.onreadystatechange = function() {
@@ -256,7 +260,7 @@ var app = (function ($) {
             } else {
                 getDataSuccess(xhr.responseText);
             }
-        }
+        };
     };
 
     return {
