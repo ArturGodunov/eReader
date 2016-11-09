@@ -3,8 +3,6 @@ var app = (function ($) {
 
     /** Auxiliary bodies elements */
     var auxiliaryBodies;
-    /** Start or end animation of pages */
-    var statusAnimation = 'end';
 
     /**
      * Custom method forEach
@@ -24,71 +22,7 @@ var app = (function ($) {
     var removeLoader = function () {
         var loader = document.getElementById('loader');
 
-        document.getElementById('book').removeChild(loader);
-    };
-
-    /**
-     * Add/remove css classes for animation and
-     * add handlers for start/end of animations
-     * */
-    var animatePages = function (indexOfPage, pages, countOfPages, countOfPagesIndicator, nextDisappearance, prevAppearance) {
-        countOfPagesIndicator.innerHTML = indexOfPage + '/' + countOfPages;
-
-        statusAnimation = 'start';
-
-        forEachNodeList(pages, function (item) {
-            if (item.classList.contains('active')) {
-                item.classList.add(nextDisappearance);
-                pages[countOfPages - indexOfPage].classList.add(prevAppearance);
-            }
-        });
-
-        var pageNextDisappearance;
-        forEachNodeList(pages, function (item) {
-            if (item.classList.contains(nextDisappearance)) {
-                pageNextDisappearance = item;
-                pageNextDisappearance.addEventListener('animationend', pageNextDisappearanceAnimationEnd);
-            }
-        });
-        function pageNextDisappearanceAnimationEnd() {
-            pageNextDisappearance.classList.remove('active', nextDisappearance);
-            pages[countOfPages - indexOfPage].classList.add('active');
-            pages[countOfPages - indexOfPage].classList.remove(prevAppearance);
-
-            statusAnimation = 'end';
-
-            forEachNodeList(pages, function (item) {
-                item.removeEventListener('animationend', pageNextDisappearanceAnimationEnd);
-            });
-        }
-    };
-
-    /**
-     * Build slider
-     * */
-    var slider = function () {
-        var indexOfPage = 1;
-        var pages = document.querySelectorAll('.page');
-        var countOfPages = pages.length;
-        var countOfPagesIndicator = document.getElementById('countPages');
-
-        countOfPagesIndicator.innerHTML = indexOfPage + '/' + countOfPages;
-
-        document.getElementById('prevPage').addEventListener('click', function () {
-            if (indexOfPage > 1 && statusAnimation !== 'start') {
-                indexOfPage--;
-
-                animatePages(indexOfPage, pages, countOfPages, countOfPagesIndicator, 'disappearance', 'prev');
-            }
-        });
-
-        document.getElementById('nextPage').addEventListener('click', function () {
-            if (indexOfPage < countOfPages && statusAnimation !== 'start') {
-                indexOfPage++;
-
-                animatePages(indexOfPage, pages, countOfPages, countOfPagesIndicator, 'next', 'appearance');
-            }
-        });
+        document.body.removeChild(loader);
     };
 
     /**
@@ -213,18 +147,19 @@ var app = (function ($) {
 
         document.body.appendChild(sectionAuxiliary);
 
-        /** Section book */
-        var sectionBook = document.createElement('section');
-        sectionBook.id = 'book';
-        sectionBook.className = 'book';
-        sectionBook.innerHTML =
-            '<ul id="pages" class="pages"></ul>' +
-            '<button type="button" id="prevPage" class="controls controls__prev"><</button>' +
-            '<button type="button" id="nextPage" class="controls controls__next">></button>' +
-            '<p id="countPages" class="count-pages"></p>' +
-            '<p id="loader" class="loader"></p>';
+        /** Pages */
+        var pages = document.createElement('ul');
+        pages.id = 'pages';
+        pages.className = 'pages';
 
-        document.body.appendChild(sectionBook);
+        document.body.appendChild(pages);
+
+        /** Loader */
+        var loader = document.createElement('p');
+        loader.id = 'loader';
+        loader.className = 'loader';
+
+        document.body.appendChild(loader);
     };
 
     /**
@@ -241,7 +176,6 @@ var app = (function ($) {
         refreshWidthContainers();
         buildList();
         removeSupportingSection();
-        slider();
     };
 
     /**
