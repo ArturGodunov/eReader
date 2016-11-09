@@ -12,7 +12,7 @@ var app = (function ($) {
         var i;
 
         for (i=0; i<arrLength; i++) {
-            callback.call(scope, arr[i]);
+            callback.call(scope, arr[i], i);
         }
     };
 
@@ -111,15 +111,23 @@ var app = (function ($) {
             var items = item.querySelectorAll('*');
 
             forEachNodeList(items, function (subitem) {
-                var margin = getComputedStyle(subitem).margin;
-                var padding = getComputedStyle(subitem).padding;
+                var marginTop = getComputedStyle(subitem).marginTop;
+                var marginRight = getComputedStyle(subitem).marginRight;
+                var marginBottom = getComputedStyle(subitem).marginBottom;
+                var marginLeft = getComputedStyle(subitem).marginLeft;
+                var paddingTop = getComputedStyle(subitem).paddingTop;
+                var paddingRight = getComputedStyle(subitem).paddingRight;
+                var paddingBottom = getComputedStyle(subitem).paddingBottom;
+                var paddingLeft = getComputedStyle(subitem).paddingLeft;
 
-                if (margin !== '0px') {
-                    subitem.style.cssText = 'margin: ' + margin + ';';
+                if (marginTop !== '0px' || marginRight !== '0px' || marginBottom !== '0px' || marginLeft !== '0px') {
+                    subitem.style.cssText =
+                        'margin: ' + marginTop + ' ' + marginRight + ' ' + marginBottom + ' ' + marginLeft + ';';
                 }
 
-                if (padding !== '0px') {
-                    subitem.style.cssText = 'padding: ' + padding + ';';
+                if (paddingTop !== '0px' || paddingRight !== '0px' || paddingBottom !== '0px' || paddingLeft !== '0px') {
+                    subitem.style.cssText =
+                        'padding: ' + paddingTop + ' ' + paddingRight + ' ' + paddingBottom + ' ' + paddingLeft + ';';
                 }
             });
         });
