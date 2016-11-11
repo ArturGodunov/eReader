@@ -1,8 +1,6 @@
 var app = (function ($) {
     "use strict";
 
-    var startTime;
-
     /** Auxiliary bodies elements */
     var auxiliaryBodies;
 
@@ -90,60 +88,6 @@ var app = (function ($) {
     };
 
     /**
-     * Fixed refreshing containers' width
-     * @see http://stackoverflow.com/questions/23408539/how-can-i-make-a-displayflex-container-expand-horizontally-with-its-wrapped-con/26231447#26231447
-     * */
-    var refreshWidthContainers = function () {
-        forEachNodeList(auxiliaryBodies, function (item) {
-            var lastChild = item.lastChild;
-            var newWidth = lastChild.offsetLeft - item.offsetLeft +
-                lastChild.offsetWidth +
-                parseFloat(getComputedStyle(lastChild).marginLeft) +
-                parseFloat(getComputedStyle(lastChild).marginRight);
-            item.style.cssText = 'width: ' + newWidth + 'px;';
-        });
-    };
-
-    /**
-     * Change styles from ePub
-     * Be careful, method cssText replace all styles
-     * */
-    var adaptationStyles = function () {
-// startTime = new Date();
-        forEachNodeList(auxiliaryBodies, function (item) {
-            var items = item.querySelectorAll('*');
-
-            forEachNodeList(items, function (subitem) {
-                var subitemComputedStyle = getComputedStyle(subitem);
-
-                var marginTop = subitemComputedStyle.marginTop;
-                var marginRight = subitemComputedStyle.marginRight;
-                var marginBottom = subitemComputedStyle.marginBottom;
-                var marginLeft = subitemComputedStyle.marginLeft;
-                var paddingTop = subitemComputedStyle.paddingTop;
-                var paddingRight = subitemComputedStyle.paddingRight;
-                var paddingBottom = subitemComputedStyle.paddingBottom;
-                var paddingLeft = subitemComputedStyle.paddingLeft;
-
-                if (marginTop !== '0px' || marginRight !== '0px' || marginBottom !== '0px' || marginLeft !== '0px') {
-                    subitem.style.marginTop = marginTop;
-                    subitem.style.marginRight = marginRight;
-                    subitem.style.marginBottom = marginBottom;
-                    subitem.style.marginLeft = marginLeft;
-                }
-
-                if (paddingTop !== '0px' || paddingRight !== '0px' || paddingBottom !== '0px' || paddingLeft !== '0px') {
-                    subitem.style.paddingTop = paddingTop;
-                    subitem.style.paddingRight = paddingRight;
-                    subitem.style.paddingBottom = paddingBottom;
-                    subitem.style.paddingLeft = paddingLeft;
-                }
-            });
-        });
-// console.log(new Date() - startTime);
-    };
-
-    /**
      * Removing supporting section which is no longer needed
      * */
     var removeSupportingSection = function () {
@@ -160,8 +104,6 @@ var app = (function ($) {
         var sectionAuxiliary = document.createElement('section');
         sectionAuxiliary.id = 'auxiliary';
         sectionAuxiliary.className = 'auxiliary';
-        sectionAuxiliary.innerHTML =
-            '<div class="auxiliary-wrap"><div id="auxiliary-view" class="auxiliary-view"></div></div>';
 
         document.body.appendChild(sectionAuxiliary);
 
@@ -184,14 +126,12 @@ var app = (function ($) {
      * Get data if success
      * */
     var getDataSuccess = function (data) {
-        document.getElementById('auxiliary-view').innerHTML = data;
-        auxiliaryBodies = document.getElementById('auxiliary-view').querySelectorAll('.body');
+        document.getElementById('auxiliary').innerHTML = data;
+        auxiliaryBodies = document.getElementById('auxiliary').querySelectorAll('.body');
 
         /**
          * Order of execution is important here
          * */
-        adaptationStyles();
-        refreshWidthContainers();
         buildList();
         removeSupportingSection();
     };

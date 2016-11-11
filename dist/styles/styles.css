@@ -105,46 +105,26 @@ img {
 }
 .auxiliary {
   position: absolute;
+  opacity: 0;
   width: 100vw;
   height: 100vh;
-  opacity: 0;
+  -webkit-column-width: 100vw;
+     -moz-column-width: 100vw;
+          column-width: 100vw;
+  -webkit-column-count: auto;
+     -moz-column-count: auto;
+          column-count: auto;
+  -webkit-column-fill: auto;
+     -moz-column-fill: auto;
+          column-fill: auto;
+  -webkit-column-gap: 0;
+     -moz-column-gap: 0;
+          column-gap: 0;
 }
-
-.auxiliary-wrap {
-  position: relative;
-  height: 100%;
-}
-
-.auxiliary-view {
-  position: absolute;
-  left: 0;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-flex-wrap: wrap;
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
-  height: 100%;
-}
-.auxiliary-view .body {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-flex-wrap: wrap;
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
+.auxiliary .body {
   white-space: normal !important;
   /* Show boundaries of chapters*/
   box-shadow: inset 0 0 0 1px #000;
-}
-.auxiliary-view .body * {
-  width: 100vw !important;
 }
 
 .pages {
@@ -162,9 +142,6 @@ img {
   height: 100%;
   background: #fff;
   /* Show all pages */
-}
-.page * {
-  width: 100vw !important;
 }
 .page.active {
   z-index: 2;

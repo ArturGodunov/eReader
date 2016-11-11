@@ -1,35 +1,22 @@
 .auxiliary{
   position: absolute;
+  opacity: 0;
   width: $width;
   height: $height;
-  opacity: 0;
-}
-
-.auxiliary-wrap{
-  position: relative;
-  height: 100%;
-}
-
-.auxiliary-view{
-  position: absolute;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100%;
+  column-width: $width;
+  column-count: auto;
+  column-fill: auto;
+  column-gap: 0;
 
   .body{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
     white-space: normal !important;
 
     /* Show boundaries of chapters*/
     box-shadow: inset 0 0 0 1px #000;
 
-    *{
-      width: $width !important;
-    }
+    //*{
+    //  width: $width !important;
+    //}
 
     //table *{
     //  word-break: break-all;
