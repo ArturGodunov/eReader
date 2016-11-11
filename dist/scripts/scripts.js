@@ -1,6 +1,8 @@
 var app = (function ($) {
     "use strict";
 
+    var startTime;
+
     /** Auxiliary bodies elements */
     var auxiliaryBodies;
 
@@ -107,30 +109,38 @@ var app = (function ($) {
      * Be careful, method cssText replace all styles
      * */
     var adaptationStyles = function () {
+// startTime = new Date();
         forEachNodeList(auxiliaryBodies, function (item) {
             var items = item.querySelectorAll('*');
 
             forEachNodeList(items, function (subitem) {
-                var marginTop = getComputedStyle(subitem).marginTop;
-                var marginRight = getComputedStyle(subitem).marginRight;
-                var marginBottom = getComputedStyle(subitem).marginBottom;
-                var marginLeft = getComputedStyle(subitem).marginLeft;
-                var paddingTop = getComputedStyle(subitem).paddingTop;
-                var paddingRight = getComputedStyle(subitem).paddingRight;
-                var paddingBottom = getComputedStyle(subitem).paddingBottom;
-                var paddingLeft = getComputedStyle(subitem).paddingLeft;
+                var subitemComputedStyle = getComputedStyle(subitem);
+
+                var marginTop = subitemComputedStyle.marginTop;
+                var marginRight = subitemComputedStyle.marginRight;
+                var marginBottom = subitemComputedStyle.marginBottom;
+                var marginLeft = subitemComputedStyle.marginLeft;
+                var paddingTop = subitemComputedStyle.paddingTop;
+                var paddingRight = subitemComputedStyle.paddingRight;
+                var paddingBottom = subitemComputedStyle.paddingBottom;
+                var paddingLeft = subitemComputedStyle.paddingLeft;
 
                 if (marginTop !== '0px' || marginRight !== '0px' || marginBottom !== '0px' || marginLeft !== '0px') {
-                    subitem.style.cssText =
-                        'margin: ' + marginTop + ' ' + marginRight + ' ' + marginBottom + ' ' + marginLeft + ';';
+                    subitem.style.marginTop = marginTop;
+                    subitem.style.marginRight = marginRight;
+                    subitem.style.marginBottom = marginBottom;
+                    subitem.style.marginLeft = marginLeft;
                 }
 
                 if (paddingTop !== '0px' || paddingRight !== '0px' || paddingBottom !== '0px' || paddingLeft !== '0px') {
-                    subitem.style.cssText =
-                        'padding: ' + paddingTop + ' ' + paddingRight + ' ' + paddingBottom + ' ' + paddingLeft + ';';
+                    subitem.style.paddingTop = paddingTop;
+                    subitem.style.paddingRight = paddingRight;
+                    subitem.style.paddingBottom = paddingBottom;
+                    subitem.style.paddingLeft = paddingLeft;
                 }
             });
         });
+// console.log(new Date() - startTime);
     };
 
     /**
