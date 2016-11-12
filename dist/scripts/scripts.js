@@ -37,7 +37,7 @@ var app = (function ($) {
         var pageBodyToString = '';
 
         pageBody.forEach(function (item) {
-            pageBodyToString += item.outerHTML;
+            pageBodyToString += item.element.outerHTML;
         });
         page.innerHTML = pageBodyToString;
 
@@ -50,27 +50,34 @@ var app = (function ($) {
     var buildList = function () {
         var allElements = [];
 
-        forEachNodeList(auxiliaryBodies, function (item) {
+        forEachNodeList(auxiliaryBodies, function (item, index) {
             var itemChildren = item.children;
 
             forEachNodeList(itemChildren, function (subitem) {
-                allElements.push(subitem);
+                var subitemWithBodyIndex = {
+                    element: subitem,
+                    bodyIndex: index
+                };
+
+                allElements.push(subitemWithBodyIndex);
             });
         });
 
         var allElementsLength = allElements.length;
         var left = 0;
         var lastIndex = 0;
+        var lastBodyIndex = 0;
 
         allElements.forEach(function (item, index) {
-            var offsetLeft = item.offsetLeft;
+            var offsetLeft = item.element.offsetLeft;
             var page;
 
-            if (offsetLeft !== left) {
+            if (offsetLeft !== left || lastBodyIndex !== item.bodyIndex) {
                 page = allElements.slice(lastIndex, index);
 
                 left = offsetLeft;
                 lastIndex = index;
+                lastBodyIndex = item.bodyIndex;
 
                 insertPage(page);
             }
