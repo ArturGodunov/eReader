@@ -62,7 +62,7 @@ table {
   font-family: "Wingdings";
   src: url("../OPS/fonts/Wingdings.ttf") format(truetype);
 }
-/* test */
+/* TEST */
 * {
   box-sizing: border-box;
 }
@@ -105,31 +105,11 @@ img {
 }
 .auxiliary {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
   opacity: 0;
 }
-
-.auxiliary-wrap {
-  position: relative;
-  height: 100%;
-}
-
-.auxiliary-view {
-  position: absolute;
-  left: 0;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-flex-wrap: wrap;
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
-  height: 100%;
-}
-.auxiliary-view .body {
+.auxiliary .body {
+  width: 100vw;
+  height: 100vh;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -140,10 +120,9 @@ img {
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
   white-space: normal !important;
-  /* Show boundaries of chapters*/
-  box-shadow: inset 0 0 0 1px #000;
+  /* TEST: Show boundaries of chapters*/
 }
-.auxiliary-view .body * {
+.auxiliary .body > * {
   width: 100vw !important;
 }
 
@@ -151,7 +130,6 @@ img {
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
 
 .page {
@@ -161,10 +139,7 @@ img {
   width: 100%;
   height: 100%;
   background: #fff;
-  /* Show all pages */
-}
-.page * {
-  width: 100vw !important;
+  /* TEST: Show all pages */
 }
 .page.active {
   z-index: 2;

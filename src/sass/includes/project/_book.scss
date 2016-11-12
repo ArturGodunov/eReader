@@ -2,7 +2,7 @@
   position: relative;
   width: $width;
   height: $height;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .page{
@@ -13,16 +13,16 @@
   height: 100%;
   background: #fff;
 
-  /* Show all pages */
+  /* TEST: Show all pages */
   //display: inline-block;
   //vertical-align: top;
   //width: $width;
   //height: $height;
   //box-shadow: 0 0 0 1px #000;
 
-  *{
-    width: $width !important;
-  }
+  //*{
+  //  width: $width !important;
+  //}
 
   &.active{
     z-index: 2;
