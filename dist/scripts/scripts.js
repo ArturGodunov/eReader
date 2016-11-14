@@ -1,8 +1,6 @@
 var app = (function ($) {
     "use strict";
 
-    var startTime;
-
     /** Auxiliary bodies elements */
     var auxiliaryBodies;
 
