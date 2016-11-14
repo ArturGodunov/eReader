@@ -1,27 +1,17 @@
 .pages{
   position: relative;
-  width: $width;
-  height: $height;
 }
 
 .page{
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   background: #fff;
 
   /* TEST: Show all pages */
   //display: inline-block;
   //vertical-align: top;
-  //width: $width;
-  //height: $height;
   //box-shadow: 0 0 0 1px #000;
-
-  //*{
-  //  width: $width !important;
-  //}
 
   &.active{
     z-index: 2;

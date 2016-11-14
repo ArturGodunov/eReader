@@ -75,9 +75,7 @@ html {
 }
 
 img {
-  max-width: 100%;
-  height: auto;
-  width: auto !important;
+  display: none;
 }
 
 /**
@@ -108,8 +106,6 @@ img {
   opacity: 0;
 }
 .auxiliary .body {
-  width: 100vw;
-  height: 100vh;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -122,22 +118,15 @@ img {
   white-space: normal !important;
   /* TEST: Show boundaries of chapters*/
 }
-.auxiliary .body > * {
-  width: 100vw !important;
-}
 
 .pages {
   position: relative;
-  width: 100vw;
-  height: 100vh;
 }
 
 .page {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   background: #fff;
   /* TEST: Show all pages */
 }

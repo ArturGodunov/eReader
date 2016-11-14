@@ -130,6 +130,46 @@ var app = (function ($) {
     };
 
     /**
+     * Set width and height of auxiliary bodies
+     * */
+    var setSizesOfAuxiliaryBodies = function () {
+        var width = document.documentElement.clientWidth;
+        var height = document.documentElement.clientHeight;
+        /* TEST */
+        // var width = 320;
+        // var height = 480;
+
+        var bodies = document.getElementById('auxiliary').querySelectorAll('.body');
+        forEachNodeList(bodies, function (item) {
+            var itemChildren = item.children;
+
+            item.style.cssText = 'width: ' + width + 'px; height: ' + height + 'px;';
+
+            forEachNodeList(itemChildren, function (subitem) {
+                subitem.style.cssText = 'width: ' + width + 'px;';
+            });
+        });
+    };
+
+    /**
+     * Set width and height of pages
+     * */
+    var setSizesOfPages = function () {
+        var width = document.documentElement.clientWidth;
+        var height = document.documentElement.clientHeight;
+        /* TEST */
+        // var width = 320;
+        // var height = 480;
+
+        // document.getElementById('pages').style.cssText = 'width: ' + width + 'px; height: ' + height + 'px;';
+
+        var listOfPages = document.querySelectorAll('.page');
+        forEachNodeList(listOfPages, function (item) {
+            item.style.cssText = 'width: ' + width + 'px; height: ' + height + 'px;';
+        });
+    };
+
+    /**
      * Get data if success
      * */
     var getDataSuccess = function (data) {
@@ -139,7 +179,9 @@ var app = (function ($) {
         /**
          * Order of execution is important here
          * */
+        setSizesOfAuxiliaryBodies();
         buildList();
+        setSizesOfPages();
         removeSupportingSection();
     };
 
