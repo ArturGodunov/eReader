@@ -103,6 +103,8 @@ body {
   opacity: 0;
 }
 .auxiliary .body {
+  width: 100vw;
+  height: 100vh;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -115,15 +117,22 @@ body {
   white-space: normal !important;
   /* TEST: Show boundaries of chapters*/
 }
+.auxiliary .body > * {
+  width: 100vw !important;
+}
 
 .pages {
   position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
 .page {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   background: #fff;
   /* TEST: Show all pages */
 }
@@ -139,7 +148,7 @@ body {
   height: 50px;
   z-index: 5;
   border: 2px solid transparent;
-  border-left-color: #000;
+  border-left-color: green;
   border-radius: 50%;
   -webkit-animation: loader 1s linear infinite;
           animation: loader 1s linear infinite;
