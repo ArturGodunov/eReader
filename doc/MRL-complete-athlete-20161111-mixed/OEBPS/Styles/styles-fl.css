@@ -1,0 +1,33 @@
+.FIXME, .fixme {
+    background-color: red;
+    color: #ff0
+}
+
+body {
+    width: 850px;
+    height: 1550px;
+    background-size: cover
+}
+
+div.text-box {
+    position: absolute;
+    top: 500px;
+    left: 100px;
+    right: 100px
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+    font-size: 100px;
+    color: #99ca3d;
+    margin: 0
+}
+
+p {
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    line-height: 1.2;
+    color: #99ca3d;
+    margin: 0;
+    text-align: justify
+}
