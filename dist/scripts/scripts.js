@@ -5,18 +5,6 @@ var app = (function ($) {
     var auxiliaryBodies;
 
     /**
-     * Custom method forEach
-     * */
-    var forEachNodeList = function (arr, callback, scope) {
-        var arrLength = arr.length;
-        var i;
-
-        for (i=0; i<arrLength; i++) {
-            callback.call(scope, arr[i], i);
-        }
-    };
-
-    /**
      * Remove loader
      * */
     var removeLoader = function () {
@@ -50,10 +38,10 @@ var app = (function ($) {
     var buildList = function () {
         var allElements = [];
 
-        forEachNodeList(auxiliaryBodies, function (item, index) {
+        Array.prototype.forEach.call(auxiliaryBodies, function (item, index) {
             var itemChildren = item.children;
 
-            forEachNodeList(itemChildren, function (subitem) {
+            Array.prototype.forEach.call(itemChildren, function (subitem) {
                 var subitemWithBodyIndex = {
                     element: subitem,
                     bodyIndex: index
