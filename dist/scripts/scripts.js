@@ -1,6 +1,18 @@
 var app = (function ($) {
     "use strict";
 
+    /** Constants */
+    var CLASS_NAME_ACTIVE_ELEMENT_PAGE = 'active';
+    var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary';
+    var CLASS_NAME_ELEMENT_BODY = 'body';
+    var CLASS_NAME_ELEMENT_LOADER = 'loader';
+    var CLASS_NAME_ELEMENT_PAGE = 'page';
+    var CLASS_NAME_ELEMENT_PAGES = 'pages';
+    var ID_ELEMENT_AUXILIARY = 'auxiliary';
+    var ID_ELEMENT_LOADER = 'loader';
+    var ID_ELEMENT_PAGES = 'pages';
+    var URL_HTML_DATA = 'data.html';
+
     /** Auxiliary bodies elements */
     var $auxiliaryBodies;
 
@@ -8,7 +20,7 @@ var app = (function ($) {
      * Remove loader
      * */
     var removeLoader = function () {
-        var $loader = document.getElementById('loader');
+        var $loader = document.getElementById(ID_ELEMENT_LOADER);
 
         document.body.removeChild($loader);
     };
@@ -17,10 +29,10 @@ var app = (function ($) {
      * Inserting page into list of pages
      * */
     var insertPage = function (pageBody) {
-        var $pages = document.getElementById('pages');
+        var $pages = document.getElementById(ID_ELEMENT_PAGES);
         var page = document.createElement('li');
 
-        page.className = 'page';
+        page.className = CLASS_NAME_ELEMENT_PAGE;
 
         var pageBodyToString = '';
 
@@ -77,14 +89,14 @@ var app = (function ($) {
 
         removeLoader();
 
-        document.getElementById('pages').lastChild.classList.add('active');
+        document.getElementById(ID_ELEMENT_PAGES).lastChild.classList.add(CLASS_NAME_ACTIVE_ELEMENT_PAGE);
     };
 
     /**
      * Removing supporting section which is no longer needed
      * */
     var removeSupportingSection = function () {
-        var $auxiliary = document.getElementById('auxiliary');
+        var $auxiliary = document.getElementById(ID_ELEMENT_AUXILIARY);
 
         document.body.removeChild($auxiliary);
     };
@@ -95,22 +107,22 @@ var app = (function ($) {
     var buildStartHtml = function () {
         /** Section auxiliary */
         var sectionAuxiliary = document.createElement('section');
-        sectionAuxiliary.id = 'auxiliary';
-        sectionAuxiliary.className = 'auxiliary';
+        sectionAuxiliary.id = ID_ELEMENT_AUXILIARY;
+        sectionAuxiliary.className = CLASS_NAME_ELEMENT_AUXILIARY;
 
         document.body.appendChild(sectionAuxiliary);
 
         /** Pages */
         var pages = document.createElement('ul');
-        pages.id = 'pages';
-        pages.className = 'pages';
+        pages.id = ID_ELEMENT_PAGES;
+        pages.className = CLASS_NAME_ELEMENT_PAGES;
 
         document.body.appendChild(pages);
 
         /** Loader */
-        var loader = document.createElement('p');
-        loader.id = 'loader';
-        loader.className = 'loader';
+        var loader = document.createElement('section');
+        loader.id = ID_ELEMENT_LOADER;
+        loader.className = CLASS_NAME_ELEMENT_LOADER;
 
         document.body.appendChild(loader);
     };
@@ -119,8 +131,8 @@ var app = (function ($) {
      * Get data if success
      * */
     var getDataSuccess = function (data) {
-        document.getElementById('auxiliary').innerHTML = data;
-        $auxiliaryBodies = document.getElementById('auxiliary').querySelectorAll('.body');
+        document.getElementById(ID_ELEMENT_AUXILIARY).innerHTML = data;
+        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelectorAll('.' + CLASS_NAME_ELEMENT_BODY);
 
         /**
          * Order of execution is important here
@@ -135,7 +147,7 @@ var app = (function ($) {
     var getData = function () {
         var xhr = new XMLHttpRequest();
 
-        xhr.open('GET', 'data.html', true);
+        xhr.open('GET', URL_HTML_DATA, true);
         xhr.send();
 
         xhr.onreadystatechange = function() {
