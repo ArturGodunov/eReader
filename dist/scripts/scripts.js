@@ -2,22 +2,22 @@ var app = (function ($) {
     "use strict";
 
     /** Auxiliary bodies elements */
-    var auxiliaryBodies;
+    var $auxiliaryBodies;
 
     /**
      * Remove loader
      * */
     var removeLoader = function () {
-        var loader = document.getElementById('loader');
+        var $loader = document.getElementById('loader');
 
-        document.body.removeChild(loader);
+        document.body.removeChild($loader);
     };
 
     /**
      * Inserting page into list of pages
      * */
     var insertPage = function (pageBody) {
-        var pages = document.getElementById('pages');
+        var $pages = document.getElementById('pages');
         var page = document.createElement('li');
 
         page.className = 'page';
@@ -29,7 +29,7 @@ var app = (function ($) {
         });
         page.innerHTML = pageBodyToString;
 
-        pages.insertBefore(page, pages.children[0]);
+        $pages.insertBefore(page, $pages.children[0]);
     };
 
     /**
@@ -38,16 +38,14 @@ var app = (function ($) {
     var buildList = function () {
         var allElements = [];
 
-        Array.prototype.forEach.call(auxiliaryBodies, function (item, index) {
-            var itemChildren = item.children;
+        Array.prototype.forEach.call($auxiliaryBodies, function (item, index) {
+            var $itemChildren = item.children;
 
-            Array.prototype.forEach.call(itemChildren, function (subitem) {
-                var subitemWithBodyIndex = {
+            Array.prototype.forEach.call($itemChildren, function (subitem) {
+                allElements.push({
                     element: subitem,
                     bodyIndex: index
-                };
-
-                allElements.push(subitemWithBodyIndex);
+                });
             });
         });
 
@@ -86,9 +84,9 @@ var app = (function ($) {
      * Removing supporting section which is no longer needed
      * */
     var removeSupportingSection = function () {
-        var auxiliary = document.getElementById('auxiliary');
+        var $auxiliary = document.getElementById('auxiliary');
 
-        document.body.removeChild(auxiliary);
+        document.body.removeChild($auxiliary);
     };
 
     /**
@@ -122,7 +120,7 @@ var app = (function ($) {
      * */
     var getDataSuccess = function (data) {
         document.getElementById('auxiliary').innerHTML = data;
-        auxiliaryBodies = document.getElementById('auxiliary').querySelectorAll('.body');
+        $auxiliaryBodies = document.getElementById('auxiliary').querySelectorAll('.body');
 
         /**
          * Order of execution is important here
