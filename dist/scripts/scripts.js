@@ -2,16 +2,16 @@ var app = (function ($) {
     "use strict";
 
     /** Constants */
-    var CLASS_NAME_ACTIVE_ELEMENT_PAGE = 'active';
-    var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary';
-    var CLASS_NAME_ELEMENT_BODY = 'body';
-    var CLASS_NAME_ELEMENT_LOADER = 'loader';
-    var CLASS_NAME_ELEMENT_PAGE = 'page';
-    var CLASS_NAME_ELEMENT_PAGES = 'pages';
-    var ID_ELEMENT_AUXILIARY = 'auxiliary';
-    var ID_ELEMENT_LOADER = 'loader';
-    var ID_ELEMENT_PAGES = 'pages';
-    var URL_HTML_DATA = 'data.html';
+    var CLASS_NAME_ACTIVE_ELEMENT_PAGE = 'active',
+        CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
+        CLASS_NAME_ELEMENT_BODY = 'body',
+        CLASS_NAME_ELEMENT_LOADER = 'loader',
+        CLASS_NAME_ELEMENT_PAGE = 'page',
+        CLASS_NAME_ELEMENT_PAGES = 'pages',
+        ID_ELEMENT_AUXILIARY = 'auxiliary',
+        ID_ELEMENT_LOADER = 'loader',
+        ID_ELEMENT_PAGES = 'pages',
+        URL_HTML_DATA = 'data.html';
 
     /** Auxiliary bodies elements */
     var $auxiliaryBodies;
@@ -29,8 +29,8 @@ var app = (function ($) {
      * Inserting page into list of pages
      * */
     var insertPage = function (pageBody) {
-        var $pages = document.getElementById(ID_ELEMENT_PAGES);
-        var page = document.createElement('li');
+        var $pages = document.getElementById(ID_ELEMENT_PAGES),
+            page = document.createElement('li');
 
         page.className = CLASS_NAME_ELEMENT_PAGE;
 
@@ -61,14 +61,14 @@ var app = (function ($) {
             });
         });
 
-        var allElementsLength = allElements.length;
-        var left = 0;
-        var lastIndex = 0;
-        var lastBodyIndex = 0;
+        var allElementsLength = allElements.length,
+            left = 0,
+            lastIndex = 0,
+            lastBodyIndex = 0;
 
         allElements.forEach(function (item, index) {
-            var offsetLeft = item.element.offsetLeft;
-            var page;
+            var offsetLeft = item.element.offsetLeft,
+                page;
 
             if (offsetLeft !== left || lastBodyIndex !== item.bodyIndex) {
                 page = allElements.slice(lastIndex, index);
