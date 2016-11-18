@@ -1,4 +1,4 @@
-var app = (function ($) {
+var app = (function () {
     "use strict";
 
     /** Constants */
@@ -172,7 +172,7 @@ var app = (function ($) {
 
     };
 
-})(jQuery);
+})();
 
 /**
  * Document ready
