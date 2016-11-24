@@ -122,18 +122,16 @@ body {
 
 .pages {
   position: relative;
-  width: 100vw;
-  height: 100vh;
 }
 
 .page {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   background: #fff;
   /* TEST: Show all pages */
+  display: inline-block;
+  width: 100vw;
+  height: 100vh;
+  vertical-align: top;
+  box-shadow: 0 0 0 1px #000;
 }
 .page.active {
   z-index: 2;
