@@ -1,20 +1,20 @@
 /**
  * Loader 1
  */
-//.loader {
-//  position: fixed;
-//  top: calc(50% - 25px);
-//  left: calc(50% - 25px);
-//  width: 50px;
-//  height: 50px;
-//  z-index: 5;
-//  border: 2px solid transparent;
-//  border-left-color: green;
-//  border-radius: 50%;
-//  animation: loader 1s linear infinite;
-//  will-change: transform;
-//  backface-visibility: hidden;
-//}
+.loader {
+  position: fixed;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+  border: 2px solid transparent;
+  border-left-color: green;
+  border-radius: 50%;
+  animation: loader 1s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
 
 /**
  * Loader 2
@@ -45,14 +45,14 @@
 /**
  * Loader 3
  */
-.loader{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  border: 2px solid lightseagreen;
-  animation: loader3 1.5s ease-in-out infinite alternate;
-  will-change: transform;
-  backface-visibility: hidden;
-}
+//.loader{
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  width: 100vw;
+//  height: 100vh;
+//  border: 2px solid lightseagreen;
+//  animation: loader3 1.5s ease-in-out infinite alternate;
+//  will-change: transform;
+//  backface-visibility: hidden;
+//}

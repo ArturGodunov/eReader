@@ -4,14 +4,14 @@ var app = (function () {
     /** Constants */
     var CLASS_NAME_ACTIVE_ELEMENT_PAGE = 'active',
         CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
-        CLASS_NAME_ELEMENT_BODY = 'body',
+        CLASS_NAME_ELEMENT_BODY = 'chapter-body',
         CLASS_NAME_ELEMENT_LOADER = 'loader',
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
         ID_ELEMENT_LOADER = 'loader',
         ID_ELEMENT_PAGES = 'pages',
-        URL_HTML_DATA = 'data.html';
+        URL_HTML_DATA = '../Content/Test-html.html';
 
     /** Auxiliary bodies elements */
     var $auxiliaryBodies;
@@ -30,7 +30,7 @@ var app = (function () {
      * */
     var insertPage = function (pageBody) {
         var $pages = document.getElementById(ID_ELEMENT_PAGES),
-            page = document.createElement('li');
+            page = document.createElement('section');
 
         page.className = CLASS_NAME_ELEMENT_PAGE;
 
@@ -113,7 +113,7 @@ var app = (function () {
         document.body.appendChild(sectionAuxiliary);
 
         /** Pages */
-        var pages = document.createElement('ul');
+        var pages = document.createElement('article');
         pages.id = ID_ELEMENT_PAGES;
         pages.className = CLASS_NAME_ELEMENT_PAGES;
 
@@ -171,7 +171,6 @@ var app = (function () {
         }
 
     };
-
 })();
 
 /**
