@@ -2,8 +2,7 @@ var app = (function () {
     "use strict";
 
     /** Constants */
-    var CLASS_NAME_ACTIVE_ELEMENT_PAGE = 'active',
-        CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
+    var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
         CLASS_NAME_ELEMENT_BODY = 'chapter-body',
         CLASS_NAME_ELEMENT_LOADER = 'loader',
         CLASS_NAME_ELEMENT_PAGE = 'page',
@@ -13,8 +12,8 @@ var app = (function () {
         ID_ELEMENT_LOADER = 'loader',
         ID_ELEMENT_PAGES = 'pages';
 
-    /** Auxiliary bodies elements */
-    var $auxiliaryBodies;
+    var $auxiliaryBodies,
+        lastChapterIndexAttr = -1;
 
     /**
      * Remove loader
@@ -28,11 +27,17 @@ var app = (function () {
     /**
      * Inserting page into list of pages
      * */
-    var insertPage = function (pageBody) {
+    var insertPage = function (pageBody, chapterIndex) {
         var $pages = document.getElementById(ID_ELEMENT_PAGES),
             page = document.createElement('section');
 
         page.className = CLASS_NAME_ELEMENT_PAGE;
+
+        if (lastChapterIndexAttr !== chapterIndex) {
+            page.setAttribute('data-chapter-index', chapterIndex);
+
+            lastChapterIndexAttr = chapterIndex;
+        }
 
         var pageBodyToString = '';
 
@@ -41,7 +46,7 @@ var app = (function () {
         });
         page.innerHTML = pageBodyToString;
 
-        $pages.insertBefore(page, $pages.children[0]);
+        $pages.appendChild(page);
     };
 
     /**
@@ -56,7 +61,7 @@ var app = (function () {
             Array.prototype.forEach.call($itemChildren, function (subitem) {
                 allElements.push({
                     element: subitem,
-                    bodyIndex: index
+                    chapterIndex: index
                 });
             });
         });
@@ -64,32 +69,30 @@ var app = (function () {
         var allElementsLength = allElements.length,
             left = 0,
             lastIndex = 0,
-            lastBodyIndex = 0;
+            lastChapterIndex = 0;
 
         allElements.forEach(function (item, index) {
             var offsetLeft = item.element.offsetLeft,
                 page;
 
-            if (offsetLeft !== left || lastBodyIndex !== item.bodyIndex) {
+            if (offsetLeft !== left || lastChapterIndex !== item.chapterIndex) {
                 page = allElements.slice(lastIndex, index);
+
+                insertPage(page, allElements[index - 1].chapterIndex + 1);
 
                 left = offsetLeft;
                 lastIndex = index;
-                lastBodyIndex = item.bodyIndex;
-
-                insertPage(page);
+                lastChapterIndex = item.chapterIndex;
             }
 
             if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
 
-                insertPage(page);
+                insertPage(page, item.chapterIndex + 1);
             }
         });
 
         removeLoader();
-
-        document.getElementById(ID_ELEMENT_PAGES).lastChild.classList.add(CLASS_NAME_ACTIVE_ELEMENT_PAGE);
     };
 
     /**
@@ -130,6 +133,70 @@ var app = (function () {
     };
 
     /**
+     * Create config
+     * */
+    var createConfig =  function () {
+        var $pages = document.querySelectorAll('.page'),
+            lastTagIndex = 0,
+            lastPageIndex = 0,
+            startTagIndex = 0,
+            chapterIndex;
+
+        var config = {
+            pages: [],
+            chapters: []
+        };
+
+        Array.prototype.forEach.call($pages, function (item, pageIndex) {
+            var $pageElements = item.children,
+                dataChapterIndex = +item.getAttribute('data-chapter-index'),
+                chapterTitle = item.querySelector('h1');
+
+            if (dataChapterIndex) {
+                chapterIndex = dataChapterIndex;
+
+                if (chapterTitle) {
+                    chapterTitle = chapterTitle.textContent;
+                } else {
+                    while (!chapterTitle) {
+                        pageIndex++;
+
+                        chapterTitle = $pages[pageIndex].querySelector('h1').textContent;
+                    }
+                }
+
+                var configChapters = {
+                    title: chapterTitle,
+                    page: pageIndex + 1,
+                    orderNumber: chapterIndex
+                };
+
+                config.chapters.push(configChapters);
+            }
+
+            Array.prototype.forEach.call($pageElements, function () {
+                if (lastPageIndex !== pageIndex) {
+                    lastPageIndex = pageIndex;
+                    startTagIndex = lastTagIndex;
+                }
+
+                lastTagIndex++;
+            });
+
+            var configPages = {
+                pageNumber: pageIndex + 1,
+                tagIndex: startTagIndex,
+                chapterOrder: chapterIndex
+            };
+
+            config.pages.push(configPages);
+        });
+
+        var configToJson = JSON.stringify(config);
+        console.log(configToJson);
+    };
+
+    /**
      * Get data if success
      * */
     var getDataSuccess = function (data) {
@@ -141,6 +208,7 @@ var app = (function () {
          * */
         buildList();
         removeSupportingSection();
+        createConfig();
     };
 
     /**

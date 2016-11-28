@@ -9,9 +9,9 @@ var app = (function () {
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
+        ID_ELEMENT_HTML_DATA = 'htmlData',
         ID_ELEMENT_LOADER = 'loader',
-        ID_ELEMENT_PAGES = 'pages',
-        URL_HTML_DATA = '../Content/Test-html.html';
+        ID_ELEMENT_PAGES = 'pages';
 
     /** Auxiliary bodies elements */
     var $auxiliaryBodies;
@@ -96,9 +96,11 @@ var app = (function () {
      * Removing supporting section which is no longer needed
      * */
     var removeSupportingSection = function () {
-        var $auxiliary = document.getElementById(ID_ELEMENT_AUXILIARY);
+        var $auxiliary = document.getElementById(ID_ELEMENT_AUXILIARY),
+            $htmldata = document.getElementById(ID_ELEMENT_HTML_DATA);
 
         document.body.removeChild($auxiliary);
+        document.body.removeChild($htmldata);
     };
 
     /**
@@ -142,23 +144,12 @@ var app = (function () {
     };
 
     /**
-     * Request of data
+     * Get html data
      * */
     var getData = function () {
-        var xhr = new XMLHttpRequest();
+        var htmlData = document.getElementById(ID_ELEMENT_HTML_DATA).innerHTML;
 
-        xhr.open('GET', URL_HTML_DATA, true);
-        xhr.send();
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState != 4) return;
-
-            if (xhr.status != 200) {
-                alert(xhr.status + ':' + xhr.statusText);
-            } else {
-                getDataSuccess(xhr.responseText);
-            }
-        };
+        getDataSuccess(htmlData);
     };
 
     return {
@@ -174,6 +165,6 @@ var app = (function () {
 })();
 
 /**
- * Document ready
+ * Document load
  * */
-document.addEventListener("DOMContentLoaded", app.init);
+window.onload = app.init;
