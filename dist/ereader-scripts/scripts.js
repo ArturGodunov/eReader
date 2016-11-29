@@ -137,7 +137,9 @@ var app = (function () {
             var $pageElements = item.children,
                 pageIndex = +item.getAttribute(DATA_ATTR_PAGE_INDEX),
                 chapterOrder = +item.getAttribute(DATA_ATTR_CHAPTER_INDEX),
-                sections = [];
+                sections = [],
+                pageInnerHTML = item.outerHTML,
+                pageInnerText = item.innerText;
 
             Array.prototype.forEach.call($pageElements, function (subitem) {
                 if (lastPageIndex !== pageIndex) {
@@ -149,16 +151,11 @@ var app = (function () {
                 lastTagIndex++;
 
                 if (subitem.matches(SELECTOR_SECTION_START)) {
-                    var $page = subitem.closest('[' + DATA_ATTR_PAGE_INDEX + ']'),
-                        pageInnerHTML = item.outerHTML;
-
                     var configSection = {
                         sectionOrder: sectionOrder,
                         title: subitem.textContent,
-                        offset: subitem.offsetTop,
-                        page: +$page.getAttribute(DATA_ATTR_PAGE_INDEX),
-                        outerHTML: headerDocument.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
-                        innerHTML: pageInnerHTML
+                        offsetTop: subitem.offsetTop,
+                        page: +item.getAttribute(DATA_ATTR_PAGE_INDEX)
                     };
 
                     sections.push(configSection);
@@ -171,6 +168,8 @@ var app = (function () {
                 pageNumber: pageIndex,
                 tagIndex: startTagIndex,
                 chapterOrder: chapterOrder,
+                outerHTML: headerDocument.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
+                innerText: pageInnerText,
                 sections: sections
             };
 
@@ -197,13 +196,11 @@ var app = (function () {
 
                     Array.prototype.forEach.call($sections, function (sectionItem) {
                         if ($sections.length) {
-                            var $page = sectionItem.closest('[' + DATA_ATTR_PAGE_INDEX + ']');
-
                             var configSection = {
                                 sectionOrder: sectionOrder,
-                                offset: sectionItem.offsetTop,
+                                offsetTop: sectionItem.offsetTop,
                                 title: sectionItem.textContent,
-                                page: +$page.getAttribute(DATA_ATTR_PAGE_INDEX)
+                                page: +subitem.getAttribute(DATA_ATTR_PAGE_INDEX)
                             };
 
                             sections.push(configSection);
