@@ -4,29 +4,19 @@ var app = (function () {
     /** Constants */
     var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
         DATA_ATTR_CHAPTER_BODY = 'data-chapter-body',
-        CLASS_NAME_ELEMENT_LOADER = 'loader',
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
         ID_ELEMENT_HTML_DATA = 'htmlData',
-        ID_ELEMENT_LOADER = 'loader',
         ID_ELEMENT_PAGES = 'pages',
         DATA_ATTR_CHAPTER_INDEX = 'data-chapter-index',
         DATA_ATTR_PAGE_INDEX = 'data-page-index',
         SELECTOR_CHAPTER_TITLE = 'h1',
-        SELECTOR_SECTION_START = 'h2';
+        SELECTOR_SECTION_START = 'h2',
+        REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
 
     var $auxiliaryBodies,
         pageIndexAttr = 1;
-
-    /**
-     * Remove loader
-     * */
-    var removeLoader = function () {
-        var $loader = document.getElementById(ID_ELEMENT_LOADER);
-
-        document.body.removeChild($loader);
-    };
 
     /**
      * Inserting page into list of pages
@@ -93,8 +83,6 @@ var app = (function () {
                 insertPage(page, item.chapterIndex + 1);
             }
         });
-
-        removeLoader();
     };
 
     /**
@@ -125,13 +113,6 @@ var app = (function () {
         pages.className = CLASS_NAME_ELEMENT_PAGES;
 
         document.body.appendChild(pages);
-
-        /** Loader */
-        var loader = document.createElement('section');
-        loader.id = ID_ELEMENT_LOADER;
-        loader.className = CLASS_NAME_ELEMENT_LOADER;
-
-        document.body.appendChild(loader);
     };
 
     /**
@@ -144,7 +125,8 @@ var app = (function () {
             lastPageIndex = 0,
             startTagIndex = 0,
             lastChapterIndex = 0,
-            sectionOrder = 1;
+            sectionOrder = 1,
+            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>';
 
         var config = {
             pages: [],
@@ -167,13 +149,16 @@ var app = (function () {
                 lastTagIndex++;
 
                 if (subitem.matches(SELECTOR_SECTION_START)) {
-                    var $page = subitem.closest('[' + DATA_ATTR_PAGE_INDEX + ']');
+                    var $page = subitem.closest('[' + DATA_ATTR_PAGE_INDEX + ']'),
+                        pageInnerHTML = item.outerHTML;
 
                     var configSection = {
                         sectionOrder: sectionOrder,
                         title: subitem.textContent,
                         offset: subitem.offsetTop,
-                        page: +$page.getAttribute(DATA_ATTR_PAGE_INDEX)
+                        page: +$page.getAttribute(DATA_ATTR_PAGE_INDEX),
+                        outerHTML: headerDocument.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
+                        innerHTML: pageInnerHTML
                     };
 
                     sections.push(configSection);
