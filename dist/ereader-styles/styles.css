@@ -49,7 +49,7 @@ body {
   position: absolute;
   opacity: 0;
 }
-.auxiliary .chapter-body {
+.auxiliary [data-chapter-body] {
   width: 100vw;
   height: 100vh;
   display: -webkit-flex;
@@ -64,7 +64,7 @@ body {
   white-space: normal !important;
   /* TEST: Show boundaries of chapters*/
 }
-.auxiliary .chapter-body > * {
+.auxiliary [data-chapter-body] > * {
   width: 100vw !important;
 }
 
@@ -73,7 +73,6 @@ body {
 }
 
 .page {
-  background: #fff;
   /* TEST: Show all pages */
   display: inline-block;
   width: 100vw;

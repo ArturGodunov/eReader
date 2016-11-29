@@ -2,7 +2,7 @@
   position: absolute;
   opacity: 0;
 
-  .chapter-body{
+  [data-chapter-body]{
     width: $width;
     height: $height;
     display: flex;
