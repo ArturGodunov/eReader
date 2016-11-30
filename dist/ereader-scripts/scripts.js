@@ -121,6 +121,18 @@ var app = (function () {
     var sendConfig = function (config) {
         console.log(config);
     };
+    
+    /**
+     * Section config
+     * */
+    var createConfigSection = function (sectionOrder, item, subitem) {
+        return {
+            sectionOrder: sectionOrder,
+            title: subitem.textContent,
+            offsetTop: subitem.offsetTop,
+            page: +item.getAttribute(DATA_ATTR_PAGE_INDEX)
+        };
+    };
 
     /**
      * Create config
@@ -158,12 +170,7 @@ var app = (function () {
                 lastTagIndex++;
 
                 if (subitem.matches('[' + DATA_ATTR_SECTION_START + ']')) {
-                    var configSection = {
-                        sectionOrder: sectionOrder,
-                        title: subitem.textContent,
-                        offsetTop: subitem.offsetTop,
-                        page: +item.getAttribute(DATA_ATTR_PAGE_INDEX)
-                    };
+                    var configSection = createConfigSection(sectionOrder, subitem, item);
 
                     sections.push(configSection);
 
@@ -203,12 +210,7 @@ var app = (function () {
 
                     Array.prototype.forEach.call($sections, function (sectionItem) {
                         if ($sections.length) {
-                            var configSection = {
-                                sectionOrder: sectionOrder,
-                                offsetTop: sectionItem.offsetTop,
-                                title: sectionItem.textContent,
-                                page: +subitem.getAttribute(DATA_ATTR_PAGE_INDEX)
-                            };
+                            var configSection = createConfigSection(sectionOrder, sectionItem, subitem);
 
                             sections.push(configSection);
 
