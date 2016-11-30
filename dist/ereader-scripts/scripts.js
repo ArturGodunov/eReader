@@ -3,17 +3,17 @@ var app = (function () {
 
     /** Constants */
     var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
-        DATA_ATTR_CHAPTER_BODY = 'data-chapter-body',
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
+        DATA_ATTR_CHAPTER_BODY = 'data-chapter-body',
+        DATA_ATTR_CHAPTER_INDEX = 'data-chapter-index',
+        DATA_ATTR_PAGE_INDEX = 'data-page-index',
+        DATA_ATTR_SECTION_START = 'data-section',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
         ID_ELEMENT_HTML_DATA = 'htmlData',
         ID_ELEMENT_PAGES = 'pages',
-        DATA_ATTR_CHAPTER_INDEX = 'data-chapter-index',
-        DATA_ATTR_PAGE_INDEX = 'data-page-index',
-        SELECTOR_CHAPTER_TITLE = 'h1',
-        SELECTOR_SECTION_START = 'h2',
-        REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
+        REPLACE_NAME_PAGE_CONTENT = '%pageContent%',
+        SELECTOR_CHAPTER_TITLE = 'h1';
 
     var $auxiliaryBodies,
         pageIndexAttr = 1;
@@ -116,6 +116,13 @@ var app = (function () {
     };
 
     /**
+     * Send config
+     * */
+    var sendConfig = function (config) {
+        console.log(config);
+    };
+
+    /**
      * Create config
      * */
     var createConfig =  function () {
@@ -150,7 +157,7 @@ var app = (function () {
 
                 lastTagIndex++;
 
-                if (subitem.matches(SELECTOR_SECTION_START)) {
+                if (subitem.matches('[' + DATA_ATTR_SECTION_START + ']')) {
                     var configSection = {
                         sectionOrder: sectionOrder,
                         title: subitem.textContent,
@@ -188,7 +195,7 @@ var app = (function () {
 
                 Array.prototype.forEach.call($chapterPages, function (subitem) {
                     var $titleElement = subitem.querySelector(SELECTOR_CHAPTER_TITLE),
-                        $sections = subitem.querySelectorAll(SELECTOR_SECTION_START);
+                        $sections = subitem.querySelectorAll('[' + DATA_ATTR_SECTION_START + ']');
 
                     if ($titleElement) {
                         chapterTitle = $titleElement.textContent;
@@ -224,7 +231,8 @@ var app = (function () {
         });
 
         var configToJson = JSON.stringify(config);
-        console.log(configToJson);
+
+        sendConfig(configToJson);
     };
 
     /**

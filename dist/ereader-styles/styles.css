@@ -53,6 +53,7 @@ body {
 }
 
 .page {
+  background: #fff;
   /* TEST: Show all pages */
   display: inline-block;
   width: 100vw;
