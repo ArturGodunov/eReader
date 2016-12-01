@@ -145,7 +145,8 @@ var app = (function () {
             startTagIndex = 0,
             lastChapterIndex = 0,
             sectionOrder = 1,
-            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>';
+            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
+            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,'');
 
         var config = {
             pages: [],
@@ -169,7 +170,7 @@ var app = (function () {
 
                 lastTagIndex++;
 
-                if (subitem.matches('[' + DATA_ATTR_SECTION_START + ']')) {
+                if (subitem.hasAttribute(DATA_ATTR_SECTION_START)) {
                     var configSection = createConfigSection(sectionOrder, subitem, item);
 
                     sections.push(configSection);
@@ -182,7 +183,7 @@ var app = (function () {
                 pageNumber: pageIndex,
                 tagIndex: startTagIndex,
                 chapterOrder: chapterOrder,
-                outerHTML: headerDocument.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
+                outerHTML: headerDocumentWithoutScript.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
                 innerText: pageInnerText,
                 sections: sections
             };
