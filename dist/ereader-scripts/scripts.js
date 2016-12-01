@@ -5,29 +5,27 @@ var app = (function () {
     var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
-        DATA_ATTR_CHAPTER_BODY = 'data-chapter-body',
-        DATA_ATTR_CHAPTER_INDEX = 'data-chapter-index',
-        DATA_ATTR_PAGE_INDEX = 'data-page-index',
-        DATA_ATTR_SECTION_START = 'data-section',
+        DATA_ATTR_CHAPTER = 'data-chapter',
+        DATA_ATTR_CHAPTER_ORDER = 'data-chapter-order',
+        DATA_ATTR_CHAPTER_TITLE = 'data-chapter-title',
+        DATA_ATTR_LAST_PAGE_ORDER = 'data-last-page-order',
+        DATA_ATTR_SECTION = 'data-section',
+        DATA_ATTR_SECTION_TITLE = 'data-section-title',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
         ID_ELEMENT_HTML_DATA = 'htmlData',
         ID_ELEMENT_PAGES = 'pages',
-        REPLACE_NAME_PAGE_CONTENT = '%pageContent%',
-        SELECTOR_CHAPTER_TITLE = 'h1';
+        REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
 
-    var $auxiliaryBodies,
-        pageIndexAttr = 1;
+    var $auxiliaryBodies;
 
     /**
      * Inserting page into list of pages
      * */
-    var insertPage = function (pageBody, chapterIndexAttr) {
+    var insertPage = function (pageBody) {
         var $pages = document.getElementById(ID_ELEMENT_PAGES),
             page = document.createElement('section');
 
         page.className = CLASS_NAME_ELEMENT_PAGE;
-        page.setAttribute(DATA_ATTR_PAGE_INDEX, pageIndexAttr);
-        page.setAttribute(DATA_ATTR_CHAPTER_INDEX, chapterIndexAttr);
 
         var pageBodyToString = '';
 
@@ -37,8 +35,6 @@ var app = (function () {
         page.innerHTML = pageBodyToString;
 
         $pages.appendChild(page);
-
-        pageIndexAttr++;
     };
 
     /**
@@ -70,7 +66,7 @@ var app = (function () {
             if (offsetLeft !== left || lastChapterIndex !== item.chapterIndex) {
                 page = allElements.slice(lastIndex, index);
 
-                insertPage(page, allElements[index - 1].chapterIndex + 1);
+                insertPage(page);
 
                 left = offsetLeft;
                 lastIndex = index;
@@ -80,7 +76,7 @@ var app = (function () {
             if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
 
-                insertPage(page, item.chapterIndex + 1);
+                insertPage(page);
             }
         });
     };
@@ -121,32 +117,21 @@ var app = (function () {
     var sendConfig = function (config) {
         console.log(config);
     };
-    
-    /**
-     * Section config
-     * */
-    var createConfigSection = function (sectionOrder, item, subitem) {
-        return {
-            sectionOrder: sectionOrder,
-            title: subitem.textContent,
-            offsetTop: subitem.offsetTop,
-            page: +item.getAttribute(DATA_ATTR_PAGE_INDEX)
-        };
-    };
 
     /**
      * Create config
      * */
     var createConfig =  function () {
         var $pages = document.querySelectorAll('.' + CLASS_NAME_ELEMENT_PAGE),
-            $chapters = document.querySelectorAll('[' + DATA_ATTR_CHAPTER_INDEX + ']'),
+            lastPageIndex = +document.getElementById(ID_ELEMENT_HTML_DATA).getAttribute(DATA_ATTR_LAST_PAGE_ORDER),
+            pageIndex = lastPageIndex,
             lastTagIndex = 0,
-            lastPageIndex = 0,
             startTagIndex = 0,
-            lastChapterIndex = 0,
             sectionOrder = 1,
             headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
-            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,'');
+            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,''),
+            $chapter = document.querySelector('[' + DATA_ATTR_CHAPTER + ']'),
+            chapterOrder = +document.querySelector('[' + DATA_ATTR_CHAPTER_ORDER + ']').getAttribute(DATA_ATTR_CHAPTER_ORDER);
 
         var config = {
             pages: [],
@@ -155,8 +140,6 @@ var app = (function () {
 
         Array.prototype.forEach.call($pages, function (item) {
             var $pageElements = item.children,
-                pageIndex = +item.getAttribute(DATA_ATTR_PAGE_INDEX),
-                chapterOrder = +item.getAttribute(DATA_ATTR_CHAPTER_INDEX),
                 sections = [],
                 pageInnerHTML = item.outerHTML,
                 pageInnerText = item.innerText;
@@ -170,8 +153,13 @@ var app = (function () {
 
                 lastTagIndex++;
 
-                if (subitem.hasAttribute(DATA_ATTR_SECTION_START)) {
-                    var configSection = createConfigSection(sectionOrder, subitem, item);
+                if (subitem.hasAttribute(DATA_ATTR_SECTION)) {
+                    var configSection = {
+                        sectionOrder: sectionOrder,
+                        title: subitem.getAttribute(DATA_ATTR_SECTION_TITLE),
+                        offsetTop: subitem.offsetTop,
+                        pageNumber: pageIndex
+                    };
 
                     sections.push(configSection);
 
@@ -189,48 +177,17 @@ var app = (function () {
             };
 
             config.pages.push(configPages);
-        });
 
-        Array.prototype.forEach.call($chapters, function (item) {
-            var chapterIndex = +item.getAttribute(DATA_ATTR_CHAPTER_INDEX),
-                pageIndex = +item.getAttribute(DATA_ATTR_PAGE_INDEX),
-                chapterTitle;
+            var configChapters = {
+                title: $chapter.getAttribute(DATA_ATTR_CHAPTER_TITLE),
+                page: pageIndex,
+                orderNumber: +$chapter.getAttribute(DATA_ATTR_CHAPTER_ORDER),
+                sections: sections
+            };
 
-            if (lastChapterIndex !== chapterIndex) {
-                var $chapterPages = document.querySelectorAll('[' + DATA_ATTR_CHAPTER_INDEX + '="' + chapterIndex + '"]'),
-                    sections = [],
-                    sectionOrder = 1;
+            config.chapters.push(configChapters);
 
-                Array.prototype.forEach.call($chapterPages, function (subitem) {
-                    var $titleElement = subitem.querySelector(SELECTOR_CHAPTER_TITLE),
-                        $sections = subitem.querySelectorAll('[' + DATA_ATTR_SECTION_START + ']');
-
-                    if ($titleElement) {
-                        chapterTitle = $titleElement.textContent;
-                    }
-
-                    Array.prototype.forEach.call($sections, function (sectionItem) {
-                        if ($sections.length) {
-                            var configSection = createConfigSection(sectionOrder, sectionItem, subitem);
-
-                            sections.push(configSection);
-
-                            sectionOrder++;
-                        }
-                    });
-                });
-
-                var configChapters = {
-                    title: chapterTitle,
-                    page: pageIndex,
-                    orderNumber: chapterIndex,
-                    sections: sections
-                };
-
-                config.chapters.push(configChapters);
-
-                lastChapterIndex = chapterIndex;
-            }
+            pageIndex++;
         });
 
         var configToJson = JSON.stringify(config);
@@ -243,14 +200,14 @@ var app = (function () {
      * */
     var startBuilding = function (data) {
         document.getElementById(ID_ELEMENT_AUXILIARY).innerHTML = data;
-        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelectorAll('[' + DATA_ATTR_CHAPTER_BODY + ']');
+        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelectorAll('[' + DATA_ATTR_CHAPTER + ']');
 
         /**
          * Order of execution is important here
          * */
         buildList();
-        removeSupportingSection();
         createConfig();
+        removeSupportingSection();
     };
 
     /**
