@@ -84,11 +84,7 @@ var app = (function () {
         for (i=0; i<$auxiliaryBodyChildrenLength; i++) {
             allElements.push($auxiliaryBodyChildren[i]);
 
-            var newSmallElement = breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]);
-
-            if (newSmallElement) {
-                $auxiliaryBodyChildrenLength++;
-            }
+            $auxiliaryBodyChildrenLength += breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]) ? 1 : 0;
         }
 
         var allElementsLength = allElements.length,
