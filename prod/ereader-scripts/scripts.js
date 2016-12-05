@@ -2,116 +2,85 @@ var app = (function () {
     "use strict";
 
     /** Constants */
-    var CLASS_NAME_CLONE_ELEMENT = 'clone-element',
-        CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
+    var CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
+        DATA_ATTR_CHAPTER_BODY = 'data-chapter-body',
         CLASS_NAME_ELEMENT_PAGE = 'page',
         CLASS_NAME_ELEMENT_PAGES = 'pages',
-        DATA_ATTR_CHAPTER = 'data-chapter',
-        DATA_ATTR_CHAPTER_ORDER = 'data-chapter-order',
-        DATA_ATTR_CHAPTER_TITLE = 'data-chapter-title',
-        DATA_ATTR_LAST_PAGE_ORDER = 'data-last-page-order',
-        DATA_ATTR_SECTION = 'data-section',
-        DATA_ATTR_SECTION_TITLE = 'data-section-title',
         ID_ELEMENT_AUXILIARY = 'auxiliary',
         ID_ELEMENT_HTML_DATA = 'htmlData',
         ID_ELEMENT_PAGES = 'pages',
+        DATA_ATTR_CHAPTER_INDEX = 'data-chapter-index',
+        DATA_ATTR_PAGE_INDEX = 'data-page-index',
+        SELECTOR_CHAPTER_TITLE = 'h1',
+        SELECTOR_SECTION_START = 'h2',
         REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
 
     var $auxiliaryBodies,
-        documentHeight = document.documentElement.clientHeight;
+        pageIndexAttr = 1;
 
     /**
      * Inserting page into list of pages
      * */
-    var insertPage = function (pageBody) {
+    var insertPage = function (pageBody, chapterIndexAttr) {
         var $pages = document.getElementById(ID_ELEMENT_PAGES),
             page = document.createElement('section');
 
         page.className = CLASS_NAME_ELEMENT_PAGE;
+        page.setAttribute(DATA_ATTR_PAGE_INDEX, pageIndexAttr);
+        page.setAttribute(DATA_ATTR_CHAPTER_INDEX, chapterIndexAttr);
 
         var pageBodyToString = '';
 
         pageBody.forEach(function (item) {
-            pageBodyToString += item.outerHTML;
+            pageBodyToString += item.element.outerHTML;
         });
         page.innerHTML = pageBodyToString;
 
         $pages.appendChild(page);
-    };
 
-    /**
-     * Breaking elements for smaller
-     * */
-    var breakingElementsForSmaller = function (allElements, item) {
-        var elementHeight = parseInt(getComputedStyle(item).height, 10);
-
-        if (elementHeight > documentHeight) {
-            var $itemChildren = item.children,
-                $itemChildrenLength = $itemChildren.length,
-                cloneItemElement = item.cloneNode(false),
-                i;
-
-            item.classList.add(CLASS_NAME_CLONE_ELEMENT);
-            cloneItemElement.classList.add(CLASS_NAME_CLONE_ELEMENT);
-
-            for (i=0; i<$itemChildrenLength; i++) {
-                if ($itemChildren[i]) {
-                    var offsetBottom = $itemChildren[i].offsetTop + parseInt(getComputedStyle($itemChildren[i]).height, 10);
-
-                    if (offsetBottom > documentHeight) {
-                        cloneItemElement.appendChild($itemChildren[i]);
-
-                        i--;
-                    }
-                }
-            }
-
-            item.parentNode.insertBefore(cloneItemElement, item.nextSibling);
-
-            return cloneItemElement;
-        }
+        pageIndexAttr++;
     };
 
     /**
      * Build list of pages
      * */
     var buildList = function () {
-        var allElements = [],
-            $auxiliaryBodyChildren = $auxiliaryBodies.children,
-            $auxiliaryBodyChildrenLength = $auxiliaryBodyChildren.length,
-            i;
+        var allElements = [];
 
-        for (i=0; i<$auxiliaryBodyChildrenLength; i++) {
-            allElements.push($auxiliaryBodyChildren[i]);
+        Array.prototype.forEach.call($auxiliaryBodies, function (item, index) {
+            var $itemChildren = item.children;
 
-            var newSmallElement = breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]);
-
-            if (newSmallElement) {
-                $auxiliaryBodyChildrenLength++;
-            }
-        }
+            Array.prototype.forEach.call($itemChildren, function (subitem) {
+                allElements.push({
+                    element: subitem,
+                    chapterIndex: index
+                });
+            });
+        });
 
         var allElementsLength = allElements.length,
             left = 0,
-            lastIndex = 0;
+            lastIndex = 0,
+            lastChapterIndex = 0;
 
         allElements.forEach(function (item, index) {
-            var offsetLeft = item.offsetLeft,
+            var offsetLeft = item.element.offsetLeft,
                 page;
 
-            if (offsetLeft !== left) {
+            if (offsetLeft !== left || lastChapterIndex !== item.chapterIndex) {
                 page = allElements.slice(lastIndex, index);
 
-                insertPage(page);
+                insertPage(page, allElements[index - 1].chapterIndex + 1);
 
                 left = offsetLeft;
                 lastIndex = index;
+                lastChapterIndex = item.chapterIndex;
             }
 
             if (index === allElementsLength - 1) {
                 page = allElements.slice(lastIndex);
 
-                insertPage(page);
+                insertPage(page, item.chapterIndex + 1);
             }
         });
     };
@@ -150,11 +119,7 @@ var app = (function () {
      * Send config
      * */
     var sendConfig = function (config) {
-        // console.log(config);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'test-config', true);
-        xhr.send(config);
+        console.log(config);
     };
 
     /**
@@ -162,15 +127,13 @@ var app = (function () {
      * */
     var createConfig =  function () {
         var $pages = document.querySelectorAll('.' + CLASS_NAME_ELEMENT_PAGE),
-            lastPageIndex = +document.getElementById(ID_ELEMENT_HTML_DATA).getAttribute(DATA_ATTR_LAST_PAGE_ORDER),
-            pageIndex = lastPageIndex,
+            $chapters = document.querySelectorAll('[' + DATA_ATTR_CHAPTER_INDEX + ']'),
             lastTagIndex = 0,
+            lastPageIndex = 0,
             startTagIndex = 0,
+            lastChapterIndex = 0,
             sectionOrder = 1,
-            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
-            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,''),
-            $chapter = document.querySelector('[' + DATA_ATTR_CHAPTER + ']'),
-            chapterOrder = +document.querySelector('[' + DATA_ATTR_CHAPTER_ORDER + ']').getAttribute(DATA_ATTR_CHAPTER_ORDER);
+            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>';
 
         var config = {
             pages: [],
@@ -179,6 +142,8 @@ var app = (function () {
 
         Array.prototype.forEach.call($pages, function (item) {
             var $pageElements = item.children,
+                pageIndex = +item.getAttribute(DATA_ATTR_PAGE_INDEX),
+                chapterOrder = +item.getAttribute(DATA_ATTR_CHAPTER_INDEX),
                 sections = [],
                 pageInnerHTML = item.outerHTML,
                 pageInnerText = item.innerText;
@@ -192,12 +157,12 @@ var app = (function () {
 
                 lastTagIndex++;
 
-                if (subitem.hasAttribute(DATA_ATTR_SECTION)) {
+                if (subitem.matches(SELECTOR_SECTION_START)) {
                     var configSection = {
                         sectionOrder: sectionOrder,
-                        title: subitem.getAttribute(DATA_ATTR_SECTION_TITLE),
+                        title: subitem.textContent,
                         offsetTop: subitem.offsetTop,
-                        pageNumber: pageIndex
+                        page: +item.getAttribute(DATA_ATTR_PAGE_INDEX)
                     };
 
                     sections.push(configSection);
@@ -207,26 +172,62 @@ var app = (function () {
             });
 
             var configPages = {
-                pageNumber: pageIndex + 1,
+                pageNumber: pageIndex,
                 tagIndex: startTagIndex,
                 chapterOrder: chapterOrder,
-                outerHTML: headerDocumentWithoutScript.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
+                outerHTML: headerDocument.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
                 innerText: pageInnerText,
                 sections: sections
             };
 
             config.pages.push(configPages);
+        });
 
-            var configChapters = {
-                title: $chapter.getAttribute(DATA_ATTR_CHAPTER_TITLE),
-                pageNumber: pageIndex + 1,
-                chapterOrder: +$chapter.getAttribute(DATA_ATTR_CHAPTER_ORDER),
-                sections: sections
-            };
+        Array.prototype.forEach.call($chapters, function (item) {
+            var chapterIndex = +item.getAttribute(DATA_ATTR_CHAPTER_INDEX),
+                pageIndex = +item.getAttribute(DATA_ATTR_PAGE_INDEX),
+                chapterTitle;
 
-            config.chapters.push(configChapters);
+            if (lastChapterIndex !== chapterIndex) {
+                var $chapterPages = document.querySelectorAll('[' + DATA_ATTR_CHAPTER_INDEX + '="' + chapterIndex + '"]'),
+                    sections = [],
+                    sectionOrder = 1;
 
-            pageIndex++;
+                Array.prototype.forEach.call($chapterPages, function (subitem) {
+                    var $titleElement = subitem.querySelector(SELECTOR_CHAPTER_TITLE),
+                        $sections = subitem.querySelectorAll(SELECTOR_SECTION_START);
+
+                    if ($titleElement) {
+                        chapterTitle = $titleElement.textContent;
+                    }
+
+                    Array.prototype.forEach.call($sections, function (sectionItem) {
+                        if ($sections.length) {
+                            var configSection = {
+                                sectionOrder: sectionOrder,
+                                offsetTop: sectionItem.offsetTop,
+                                title: sectionItem.textContent,
+                                page: +subitem.getAttribute(DATA_ATTR_PAGE_INDEX)
+                            };
+
+                            sections.push(configSection);
+
+                            sectionOrder++;
+                        }
+                    });
+                });
+
+                var configChapters = {
+                    title: chapterTitle,
+                    page: pageIndex,
+                    orderNumber: chapterIndex,
+                    sections: sections
+                };
+
+                config.chapters.push(configChapters);
+
+                lastChapterIndex = chapterIndex;
+            }
         });
 
         var configToJson = JSON.stringify(config);
@@ -239,14 +240,14 @@ var app = (function () {
      * */
     var startBuilding = function (data) {
         document.getElementById(ID_ELEMENT_AUXILIARY).innerHTML = data;
-        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelector('[' + DATA_ATTR_CHAPTER + ']');
+        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelectorAll('[' + DATA_ATTR_CHAPTER_BODY + ']');
 
         /**
          * Order of execution is important here
          * */
         buildList();
-        createConfig();
         removeSupportingSection();
+        createConfig();
     };
 
     /**

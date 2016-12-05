@@ -8,6 +8,7 @@
   font-family: "Wingdings";
   src: url("../OPS/fonts/Wingdings.ttf") format(truetype);
 }
+/* TEST */
 * {
   box-sizing: border-box;
 }
@@ -21,25 +22,14 @@ body {
   margin: 0;
 }
 
-img {
-  max-width: 100% !important;
-  height: auto !important;
-  width: auto !important;
-}
-
 /**
  * Project
  */
-#htmlData {
-  position: absolute;
-  opacity: 0;
-}
-
 .auxiliary {
   position: absolute;
   opacity: 0;
 }
-.auxiliary [data-chapter] {
+.auxiliary [data-chapter-body] {
   width: 100vw;
   height: 100vh;
   display: -webkit-flex;
@@ -52,26 +42,22 @@ img {
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
   white-space: normal !important;
+  /* TEST: Show boundaries of chapters*/
 }
-.auxiliary [data-chapter] > * {
+.auxiliary [data-chapter-body] > * {
   width: 100vw !important;
 }
 
+.pages {
+  position: relative;
+}
+
 .page {
+  background: #fff;
+  /* TEST: Show all pages */
   display: inline-block;
   width: 100vw;
   height: 100vh;
   vertical-align: top;
-  background: #fff;
   box-shadow: 0 0 0 1px #000;
-  /* Test */
-}
-
-.page:not(:first-child) .clone-element {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-.page:not(:last-child) .clone-element {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
 }
