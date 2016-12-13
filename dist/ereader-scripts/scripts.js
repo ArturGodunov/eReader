@@ -17,7 +17,7 @@ var app = (function () {
         ID_ELEMENT_PAGES = 'pages',
         REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
 
-    var $auxiliaryBodies,
+    var $auxiliaryBody,
         documentHeight = document.documentElement.clientHeight;
 
     /**
@@ -40,6 +40,32 @@ var app = (function () {
     };
 
     /**
+     * Breaking text for smaller
+     * */
+    var breakingTextForSmaller = function (element, elementHeight) {
+        var text = element.textContent,
+            textLength = text.length,
+            pageCount = Math.ceil(elementHeight / documentHeight),
+            indexSlice = Math.floor(textLength / pageCount),
+            i;
+
+        // while (text[indexSlice].match(/\S/)) {
+        //     indexSlice--;
+        // }
+
+        element.textContent = text.substr(0, indexSlice);
+
+        for (i=1; i<pageCount; i++) {
+            var cloneElement = element.cloneNode(false);
+
+            cloneElement.textContent = text.substr(indexSlice + 1, indexSlice);
+            element.parentNode.insertBefore(cloneElement, element.nextSibling);
+        }
+
+        return pageCount;
+    };
+
+    /**
      * Breaking elements for smaller
      * */
     var breakingElementsForSmaller = function (allElements, item) {
@@ -49,26 +75,33 @@ var app = (function () {
             var $itemChildren = item.children,
                 $itemChildrenLength = $itemChildren.length,
                 cloneItemElement = item.cloneNode(false),
-                i;
+                i, j;
 
             item.classList.add(CLASS_NAME_CLONE_ELEMENT);
             cloneItemElement.classList.add(CLASS_NAME_CLONE_ELEMENT);
 
             for (i=0; i<$itemChildrenLength; i++) {
-                if ($itemChildren[i]) {
-                    var offsetBottom = $itemChildren[i].offsetTop + parseInt(getComputedStyle($itemChildren[i]).height, 10);
+                var offsetBottom = $itemChildren[i].offsetTop + parseInt(getComputedStyle($itemChildren[i]).height, 10);
 
-                    if (offsetBottom > documentHeight) {
-                        cloneItemElement.appendChild($itemChildren[i]);
+                if (offsetBottom > documentHeight) {
+                    for (j=i; j<$itemChildren.length; j++) {
 
-                        i--;
+                        /**/
+                        var subelementHeight = parseInt(getComputedStyle($itemChildren[j]).height, 10);
+                        if (subelementHeight > documentHeight) {
+                            breakingTextForSmaller($itemChildren[j], subelementHeight);
+                        } else {
+                        /**/
+
+                            cloneItemElement.appendChild($itemChildren[j]);
+                        }
+                        j--;
                     }
+                    break;
                 }
             }
 
             item.parentNode.insertBefore(cloneItemElement, item.nextSibling);
-
-            return cloneItemElement;
         }
     };
 
@@ -77,14 +110,13 @@ var app = (function () {
      * */
     var buildList = function () {
         var allElements = [],
-            $auxiliaryBodyChildren = $auxiliaryBodies.children,
-            $auxiliaryBodyChildrenLength = $auxiliaryBodyChildren.length,
+            $auxiliaryBodyChildren = $auxiliaryBody.children,
             i;
 
-        for (i=0; i<$auxiliaryBodyChildrenLength; i++) {
+        for (i=0; i<$auxiliaryBodyChildren.length; i++) {
             allElements.push($auxiliaryBodyChildren[i]);
 
-            $auxiliaryBodyChildrenLength += breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]) ? 1 : 0;
+            breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]);
         }
 
         var allElementsLength = allElements.length,
@@ -147,10 +179,6 @@ var app = (function () {
      * */
     var sendConfig = function (config) {
         // console.log(config);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'test-config', true);
-        xhr.send(config);
     };
 
     /**
@@ -235,7 +263,7 @@ var app = (function () {
      * */
     var startBuilding = function (data) {
         document.getElementById(ID_ELEMENT_AUXILIARY).innerHTML = data;
-        $auxiliaryBodies = document.getElementById(ID_ELEMENT_AUXILIARY).querySelector('[' + DATA_ATTR_CHAPTER + ']');
+        $auxiliaryBody = document.getElementById(ID_ELEMENT_AUXILIARY).querySelector('[' + DATA_ATTR_CHAPTER + ']');
 
         /**
          * Order of execution is important here
