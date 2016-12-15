@@ -2,255 +2,50 @@ var app = (function () {
     "use strict";
 
     /** Constants */
-    var CLASS_NAME_CLONE_ELEMENT = 'clone-element',
-        CLASS_NAME_ELEMENT_AUXILIARY = 'auxiliary',
-        CLASS_NAME_ELEMENT_PAGE = 'page',
-        CLASS_NAME_ELEMENT_PAGES = 'pages',
-        DATA_ATTR_CHAPTER = 'data-chapter',
-        DATA_ATTR_CHAPTER_ORDER = 'data-chapter-order',
-        DATA_ATTR_CHAPTER_TITLE = 'data-chapter-title',
-        DATA_ATTR_LAST_PAGE_ORDER = 'data-last-page-order',
-        DATA_ATTR_SECTION = 'data-section',
-        DATA_ATTR_SECTION_TITLE = 'data-section-title',
-        ID_ELEMENT_AUXILIARY = 'auxiliary',
-        ID_ELEMENT_HTML_DATA = 'htmlData',
-        ID_ELEMENT_PAGES = 'pages',
-        REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
-
-    var $auxiliaryBody,
-        documentHeight = document.documentElement.clientHeight;
-
-    /**
-     * Inserting page into list of pages
-     * */
-    var insertPage = function (pageBody) {
-        var $pages = document.getElementById(ID_ELEMENT_PAGES),
-            page = document.createElement('section');
-
-        page.className = CLASS_NAME_ELEMENT_PAGE;
-
-        var pageBodyToString = '';
-
-        pageBody.forEach(function (item) {
-            pageBodyToString += item.outerHTML;
-        });
-        page.innerHTML = pageBodyToString;
-
-        $pages.appendChild(page);
-    };
-
-    /**
-     * Breaking text for smaller
-     * */
-    var breakingTextForSmaller = function (element, elementHeight) {
-        var text = element.textContent,
-            textLength = text.length,
-            pageCount = Math.ceil(elementHeight / documentHeight),
-            indexSlice = Math.floor(textLength / pageCount),
-            i;
-
-        // while (text[indexSlice].match(/\S/)) {
-        //     indexSlice--;
-        // }
-
-        element.textContent = text.substr(0, indexSlice);
-
-        for (i=1; i<pageCount; i++) {
-            var cloneElement = element.cloneNode(false);
-
-            cloneElement.textContent = text.substr(indexSlice + 1, indexSlice);
-            element.parentNode.insertBefore(cloneElement, element.nextSibling);
-        }
-
-        return pageCount;
-    };
-
-    /**
-     * Breaking elements for smaller
-     * */
-    var breakingElementsForSmaller = function (allElements, item) {
-        var elementHeight = parseInt(getComputedStyle(item).height, 10);
-
-        if (elementHeight > documentHeight) {
-            var $itemChildren = item.children,
-                $itemChildrenLength = $itemChildren.length,
-                cloneItemElement = item.cloneNode(false),
-                i, j;
-
-            item.classList.add(CLASS_NAME_CLONE_ELEMENT);
-            cloneItemElement.classList.add(CLASS_NAME_CLONE_ELEMENT);
-
-            for (i=0; i<$itemChildrenLength; i++) {
-                var offsetBottom = $itemChildren[i].offsetTop + parseInt(getComputedStyle($itemChildren[i]).height, 10);
-
-                if (offsetBottom > documentHeight) {
-                    for (j=i; j<$itemChildren.length; j++) {
-
-                        /**/
-                        var subelementHeight = parseInt(getComputedStyle($itemChildren[j]).height, 10);
-                        if (subelementHeight > documentHeight) {
-                            breakingTextForSmaller($itemChildren[j], subelementHeight);
-                        } else {
-                        /**/
-
-                            cloneItemElement.appendChild($itemChildren[j]);
-                        }
-                        j--;
-                    }
-                    break;
-                }
-            }
-
-            item.parentNode.insertBefore(cloneItemElement, item.nextSibling);
-        }
-    };
-
-    /**
-     * Build list of pages
-     * */
-    var buildList = function () {
-        var allElements = [],
-            $auxiliaryBodyChildren = $auxiliaryBody.children,
-            i;
-
-        for (i=0; i<$auxiliaryBodyChildren.length; i++) {
-            allElements.push($auxiliaryBodyChildren[i]);
-
-            breakingElementsForSmaller(allElements, $auxiliaryBodyChildren[i]);
-        }
-
-        var allElementsLength = allElements.length,
-            left = 0,
-            lastIndex = 0;
-
-        allElements.forEach(function (item, index) {
-            var offsetLeft = item.offsetLeft,
-                page;
-
-            if (offsetLeft !== left) {
-                page = allElements.slice(lastIndex, index);
-
-                insertPage(page);
-
-                left = offsetLeft;
-                lastIndex = index;
-            }
-
-            if (index === allElementsLength - 1) {
-                page = allElements.slice(lastIndex);
-
-                insertPage(page);
-            }
-        });
-    };
-
-    /**
-     * Removing supporting section which is no longer needed
-     * */
-    var removeSupportingSection = function () {
-        var $auxiliary = document.getElementById(ID_ELEMENT_AUXILIARY),
-            $htmldata = document.getElementById(ID_ELEMENT_HTML_DATA);
-
-        document.body.removeChild($auxiliary);
-        document.body.removeChild($htmldata);
-    };
-
-    /**
-     * Build start html
-     * */
-    var buildStartHtml = function () {
-        /** Section auxiliary */
-        var sectionAuxiliary = document.createElement('section');
-        sectionAuxiliary.id = ID_ELEMENT_AUXILIARY;
-        sectionAuxiliary.className = CLASS_NAME_ELEMENT_AUXILIARY;
-
-        document.body.appendChild(sectionAuxiliary);
-
-        /** Pages */
-        var pages = document.createElement('article');
-        pages.id = ID_ELEMENT_PAGES;
-        pages.className = CLASS_NAME_ELEMENT_PAGES;
-
-        document.body.appendChild(pages);
-    };
-
-    /**
-     * Send config
-     * */
-    var sendConfig = function (config) {
-        // console.log(config);
-    };
+    var DATA_ATTR_CHAPTER_ID = 'data-chapter-id',
+        DATA_ATTR_START_PAGE = 'data-start-page',
+        DATA_ATTR_SECTION_ID = 'data-section-id';
 
     /**
      * Create config
      * */
-    var createConfig =  function () {
-        var $pages = document.querySelectorAll('.' + CLASS_NAME_ELEMENT_PAGE),
-            lastPageIndex = +document.getElementById(ID_ELEMENT_HTML_DATA).getAttribute(DATA_ATTR_LAST_PAGE_ORDER),
-            pageIndex = lastPageIndex,
-            lastTagIndex = 0,
-            startTagIndex = 0,
-            sectionOrder = 1,
-            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
-            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,''),
-            $chapter = document.querySelector('[' + DATA_ATTR_CHAPTER + ']'),
-            chapterOrder = +document.querySelector('[' + DATA_ATTR_CHAPTER_ORDER + ']').getAttribute(DATA_ATTR_CHAPTER_ORDER);
+    var createConfig = function () {
+        var documentWidth = document.documentElement.clientWidth,
+            $lastElements = document.body.querySelectorAll('*:last-child'),
+            $lastElement = $lastElements[$lastElements.length - 1],
+            contentWidth = $lastElement.offsetLeft + $lastElement.offsetWidth;
 
         var config = {
-            pages: [],
-            chapters: []
+            id: +document.querySelector('[' + DATA_ATTR_CHAPTER_ID + ']').getAttribute(DATA_ATTR_CHAPTER_ID),
+            startPage: +document.querySelector('[' + DATA_ATTR_START_PAGE + ']').getAttribute(DATA_ATTR_START_PAGE),
+            totalPages: contentWidth / documentWidth,
+            chapterInnerText: document.body.innerText,
+            sections: [],
+            tags: []
         };
 
-        Array.prototype.forEach.call($pages, function (item) {
-            var $pageElements = item.children,
-                sections = [],
-                pageInnerHTML = item.outerHTML,
-                pageInnerText = item.innerText;
+        var sections = document.querySelectorAll('[' + DATA_ATTR_SECTION_ID + ']');
+        Array.prototype.forEach.call(sections, function (item) {
+            var pageIndex = item.offsetLeft / documentWidth + 1;
 
-            Array.prototype.forEach.call($pageElements, function (subitem) {
-                if (lastPageIndex !== pageIndex) {
-                    startTagIndex = lastTagIndex;
-
-                    lastPageIndex = pageIndex;
-                }
-
-                lastTagIndex++;
-
-                if (subitem.hasAttribute(DATA_ATTR_SECTION)) {
-                    var configSection = {
-                        sectionOrder: sectionOrder,
-                        title: subitem.getAttribute(DATA_ATTR_SECTION_TITLE),
-                        offsetTop: subitem.offsetTop,
-                        pageNumber: pageIndex
-                    };
-
-                    sections.push(configSection);
-
-                    sectionOrder++;
-                }
-            });
-
-            var configPages = {
-                pageNumber: pageIndex + 1,
-                tagIndex: startTagIndex,
-                chapterOrder: chapterOrder,
-                outerHTML: headerDocumentWithoutScript.replace(REPLACE_NAME_PAGE_CONTENT, pageInnerHTML),
-                innerText: pageInnerText,
-                sections: sections
+            var section = {
+                id: +item.getAttribute(DATA_ATTR_SECTION_ID),
+                offsetTop: item.offsetTop,
+                pageIndex: pageIndex,
+                pageNumber: config.startPage + pageIndex
             };
 
-            config.pages.push(configPages);
+            config.sections.push(section);
+        });
 
-            var configChapters = {
-                title: $chapter.getAttribute(DATA_ATTR_CHAPTER_TITLE),
-                pageNumber: pageIndex + 1,
-                chapterOrder: +$chapter.getAttribute(DATA_ATTR_CHAPTER_ORDER),
-                sections: sections
+        var tags = document.body.querySelectorAll('*');
+        Array.prototype.forEach.call(tags, function (item, i) {
+            var tag = {
+                tagIndex: i + 1,
+                pageNumber: item.offsetLeft / documentWidth + 1
             };
 
-            config.chapters.push(configChapters);
-
-            pageIndex++;
+            config.tags.push(tag);
         });
 
         var configToJson = JSON.stringify(config);
@@ -259,27 +54,10 @@ var app = (function () {
     };
 
     /**
-     * Start building
+     * Send config
      * */
-    var startBuilding = function (data) {
-        document.getElementById(ID_ELEMENT_AUXILIARY).innerHTML = data;
-        $auxiliaryBody = document.getElementById(ID_ELEMENT_AUXILIARY).querySelector('[' + DATA_ATTR_CHAPTER + ']');
-
-        /**
-         * Order of execution is important here
-         * */
-        buildList();
-        createConfig();
-        removeSupportingSection();
-    };
-
-    /**
-     * Get html data
-     * */
-    var getData = function () {
-        var htmlData = document.getElementById(ID_ELEMENT_HTML_DATA).innerHTML;
-
-        startBuilding(htmlData);
+    var sendConfig = function (config) {
+        console.dir(config);
     };
 
     return {
@@ -287,10 +65,8 @@ var app = (function () {
          * Initialization
          * */
         init: function() {
-            buildStartHtml();
-            getData();
+            createConfig();
         }
-
     };
 })();
 

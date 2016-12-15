@@ -1,122 +1,28 @@
-[
-	{
-		title : "Cover", 
-		level : 1,
-		href : "../Content/blank.xhtml"
-	}, 
-	{
-		title : "Level 5", 
-		level : 1,
-		href : "../Content/Chapter5.xhtml"
-	},
-	{
-		title : "5.1 Attitude", 
-		level : 2,
-		href : "../Content/Chapter5-1.xhtml"
-	},
-	{
-		title : "Respect", 
-		level : 3,
-		href : "../Content/Chapter5-1a.xhtml"
-	},
-	{
-		title : "Sportsmanship", 
-		level : 3,
-		href : "../Content/Chapter5-1b.xhtml"
-	},
-	{
-		title : "Teamwork", 
-		level : 3,
-		href : "../Content/Chapter5-1c.xhtml"
-	},
-	{
-		title : "Professionalism", 
-		level : 3,
-		href : "../Content/Chapter5-1d.xhtml"
-	},
-	{
-		title : "Leadership", 
-		level : 3,
-		href : "../Content/Chapter5-1e.xhtml"
-	},
-	{
-		title : "5.2 Preparation", 
-		level : 2,
-		href : "../Content/Chapter5-2.xhtml"
-	},
-	{
-		title : "Lower Body Strength", 
-		level : 3,
-		href : "../Content/Chapter5-3a.xhtml"
-	},
-	{
-		title : "Upper Body Strength", 
-		level : 3,
-		href : "../Content/Chapter5-3b.xhtml"
-	},
-	{
-		title : "Core Strength", 
-		level : 3,
-		href : "../Content/Chapter5-3c.xhtml"
-	},
-	{
-		title : "Level 5 Fitness Test", 
-		level : 3,
-		href : "../Content/Chapter5-3-test.xhtml"
-	},
-	{
-		title : "5.4 Technique", 
-		level : 2,
-		href : "../Content/Chapter5-4.xhtml"
-	},
-	{
-		title : "Foundational Ball Skills/Dribbling", 
-		level : 3,
-		href : "../Content/Chapter5-4a.xhtml"
-	},
-	{
-		title : "Passing", 
-		level : 3,
-		href : "../Content/Chapter5-4b.xhtml"
-	},
-	{
-		title : "Ball Control", 
-		level : 3,
-		href : "../Content/Chapter5-4c.xhtml"
-	},
-	{
-		title : "Ball Striking/Shooting", 
-		level : 3,
-		href : "../Content/Chapter5-4d.xhtml"
-	},
-	{
-		title : "Heading", 
-		level : 3,
-		href : "../Content/Chapter5-4e.xhtml"
-	},
-	{
-		title : "5.5 Lifestyle", 
-		level : 2,
-		href : "../Content/Chapter5-5.xhtml"
-	},
-	{
-		title : "Family", 
-		level : 3,
-		href : "../Content/Chapter5-5a.xhtml"
-	},
-	{
-		title : "Academics", 
-		level : 3,
-		href : "../Content/Chapter5-5b.xhtml"
-	},
-	{
-		title : "Social Life", 
-		level : 3,
-		href : "../Content/Chapter5-5c.xhtml"
-	},
-	{
-		title : "Role Model", 
-		level : 3,
-		href : "../Content/Chapter5-5d.xhtml"
-	}
-]
+{
+  "id": 1,
+  "startPage": 7,
+  "totalPages": 10,
+  "chapterInnerText": "",
+  "sections": [
+    {
+      "id": 2,
+      "offsetTop": 54,
+      "pageNumber": 11,
+      "pageIndex": 4
+    }
+  ],
+  "tags": [
+    {
+      "tagIndex": 1,
+      "pageNumber": 1
+    },
+    {
+      "tagIndex": 2,
+      "pageNumber": 1
+    },
+    {
+      "tagIndex": 3,
+      "pageNumber": 2
+    }
+  ]
+}
