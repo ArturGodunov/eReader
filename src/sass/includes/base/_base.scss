@@ -15,9 +15,8 @@ body{
 
 img{
   display: block !important;
-  margin: 0 auto;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
+  width: 100vw !important;
   height: auto !important;
-  width: auto !important;
+  max-height: 100vh !important;
+  object-fit: contain;
 }

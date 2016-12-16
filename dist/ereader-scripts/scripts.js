@@ -1,25 +1,40 @@
+/**
+ * For mobile developers
+ *
+ * You need methods 'sendConfig' and 'app.getSearchResultPosition'
+ * */
 var app = (function () {
     "use strict";
 
     /** Constants */
-    var DATA_ATTR_CHAPTER_ID = 'data-chapter-id',
+    var CLASS_NAME_SEARCH_RESULT = 'search-result',
+        DATA_ATTR_CHAPTER_ID = 'data-chapter-id',
         DATA_ATTR_START_PAGE = 'data-start-page',
-        DATA_ATTR_SECTION_ID = 'data-section-id';
+        DATA_ATTR_SECTION_ID = 'data-section-id',
+        ID_SEARCH_RESULT = 'search-result',
+        REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
+
+    var documentWidth = document.documentElement.clientWidth;
 
     /**
      * Create config
      * */
     var createConfig = function () {
-        var documentWidth = document.documentElement.clientWidth,
-            $lastElements = document.body.querySelectorAll('*:last-child'),
+        var $lastElements = document.body.querySelectorAll('*:last-child'),
             $lastElement = $lastElements[$lastElements.length - 1],
-            contentWidth = $lastElement.offsetLeft + $lastElement.offsetWidth;
+            lastElementOffsetLeft = $lastElement.offsetLeft,
+            totalPages = lastElementOffsetLeft % documentWidth === 0 ?
+                lastElementOffsetLeft / documentWidth + 1 :
+                Math.ceil(lastElementOffsetLeft / documentWidth),
+            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
+            headerDocumentWithoutScript = headerDocument.replace(/<script.+<\/script>/,'');
 
         var config = {
             id: +document.querySelector('[' + DATA_ATTR_CHAPTER_ID + ']').getAttribute(DATA_ATTR_CHAPTER_ID),
             startPage: +document.querySelector('[' + DATA_ATTR_START_PAGE + ']').getAttribute(DATA_ATTR_START_PAGE),
-            totalPages: contentWidth / documentWidth,
+            totalPages: totalPages,
             chapterInnerText: document.body.innerText,
+            chapterOuterHTML: headerDocumentWithoutScript.replace(REPLACE_NAME_PAGE_CONTENT, document.body.innerHTML),
             sections: [],
             tags: []
         };
@@ -42,7 +57,7 @@ var app = (function () {
         Array.prototype.forEach.call(tags, function (item, i) {
             var tag = {
                 tagIndex: i + 1,
-                pageNumber: item.offsetLeft / documentWidth + 1
+                pageNumber: Math.floor(item.offsetLeft / documentWidth + 1) /*Не забыть убрать округление*/
             };
 
             config.tags.push(tag);
@@ -51,21 +66,104 @@ var app = (function () {
         var configToJson = JSON.stringify(config);
 
         sendConfig(configToJson);
+        // sendConfig(config);
     };
 
     /**
      * Send config
      * */
     var sendConfig = function (config) {
-        console.dir(config);
+        // console.dir(config);
     };
 
     return {
+        /**
+         * Get search result position
+         * */
+        getSearchResultPosition: function (string, resultOrder) {
+            var resultIndex = resultOrder || 1,
+                chapterElements = document.body.querySelectorAll('*'),
+                chapterNodes = [];
+
+            /**
+             * Create new array with text nodes only
+             * */
+            Array.prototype.forEach.call(chapterElements, function (item) {
+                var itemChildNodes = item.childNodes,
+                    itemChildNodesLength = itemChildNodes.length;
+
+                if (itemChildNodesLength) {
+                    for (var i=0; i<itemChildNodesLength; i++) {
+                        if (itemChildNodes[i].nodeType === 3 && /\S/.test(itemChildNodes[i].nodeValue)) {
+                            chapterNodes.push(itemChildNodes[i]);
+                        }
+                    }
+                }
+            });
+
+            /**
+             * Iterate all text nodes
+             * */
+            var currentResultIndex = 0,
+                chapterNodesLength = chapterNodes.length;
+
+            for (var i=0; i<chapterNodesLength; i++) {
+                var itemNodeValue = chapterNodes[i].nodeValue,
+                    matches = itemNodeValue.match(new RegExp(string, 'g')),
+                    matchesCount = matches ? matches.length : 0,
+                    lastStartOffset = 0;
+
+                currentResultIndex += matchesCount;
+
+                /**
+                 * Find caret offsets and wrapping search result into <span>
+                 * */
+                if (currentResultIndex >= resultIndex) {
+                    var countIterations = matchesCount - (currentResultIndex - resultIndex);
+
+                   for (var j=0; j<countIterations; j++) {
+                       lastStartOffset = itemNodeValue.indexOf(string, lastStartOffset ? lastStartOffset + string.length: 0);
+                   }
+
+                    var range = document.createRange();
+
+                    range.setStart(chapterNodes[i], lastStartOffset);
+                    range.setEnd(chapterNodes[i], lastStartOffset + string.length);
+
+                    var wrapSpan = document.createElement('span');
+                    wrapSpan.id = CLASS_NAME_SEARCH_RESULT;
+                    wrapSpan.className = ID_SEARCH_RESULT;
+
+                    range.surroundContents(wrapSpan);
+
+                    break;
+                }
+            }
+
+            /**
+             * Return page number with search result
+             * */
+            var resultSpan = document.getElementById(ID_SEARCH_RESULT),
+                resultSpanOffsetLeft,
+                searchResultPageNumber = null;
+
+            if (resultSpan) {
+                resultSpanOffsetLeft = resultSpan.offsetLeft;
+
+                searchResultPageNumber = resultSpanOffsetLeft % documentWidth === 0 ?
+                    resultSpanOffsetLeft / documentWidth + 1 :
+                    Math.ceil(resultSpanOffsetLeft / documentWidth);
+            }
+
+            return searchResultPageNumber
+        },
+
         /**
          * Initialization
          * */
         init: function() {
             createConfig();
+            app.getSearchResultPosition('must', 1);
         }
     };
 })();
