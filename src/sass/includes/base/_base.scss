@@ -20,3 +20,7 @@ img{
   max-height: 100vh !important;
   object-fit: contain;
 }
+
+h1, h2, h4, h5, h6{
+  word-break: break-all;
+}

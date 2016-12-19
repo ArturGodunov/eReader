@@ -80,10 +80,12 @@ var app = (function () {
         /**
          * Get search result position
          * */
-        getSearchResultPosition: function (string, resultOrder) {
+        getSearchResultPosition: function (searchString, resultOrder) {
             var resultIndex = resultOrder || 1,
                 chapterElements = document.body.querySelectorAll('*'),
-                chapterNodes = [];
+                chapterNodes = [],
+                string = searchString.toLowerCase();
+
 
             /**
              * Create new array with text nodes only
@@ -108,7 +110,7 @@ var app = (function () {
                 chapterNodesLength = chapterNodes.length;
 
             for (var i=0; i<chapterNodesLength; i++) {
-                var itemNodeValue = chapterNodes[i].nodeValue,
+                var itemNodeValue = chapterNodes[i].nodeValue.toLowerCase(),
                     matches = itemNodeValue.match(new RegExp(string, 'g')),
                     matchesCount = matches ? matches.length : 0,
                     lastStartOffset = 0;
@@ -145,7 +147,8 @@ var app = (function () {
              * */
             var resultSpan = document.getElementById(ID_SEARCH_RESULT),
                 resultSpanOffsetLeft,
-                searchResultPageNumber = null;
+                searchResultPageNumber = null,
+                dataStartPage = +document.querySelector('[' + DATA_ATTR_START_PAGE + ']').getAttribute(DATA_ATTR_START_PAGE);
 
             if (resultSpan) {
                 resultSpanOffsetLeft = resultSpan.offsetLeft;
@@ -153,6 +156,9 @@ var app = (function () {
                 searchResultPageNumber = resultSpanOffsetLeft % documentWidth === 0 ?
                     resultSpanOffsetLeft / documentWidth + 1 :
                     Math.ceil(resultSpanOffsetLeft / documentWidth);
+
+                searchResultPageNumber += dataStartPage;
+                searchResultPageNumber += '';
             }
 
             return searchResultPageNumber
@@ -163,7 +169,7 @@ var app = (function () {
          * */
         init: function() {
             createConfig();
-            app.getSearchResultPosition('must', 1);
+            console.log(app.getSearchResultPosition('student-athlete', 1));
         }
     };
 })();
