@@ -5,4 +5,13 @@ body{
   column-count: auto;
   column-fill: auto;
   column-gap: 0;
+
+  & > *{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }

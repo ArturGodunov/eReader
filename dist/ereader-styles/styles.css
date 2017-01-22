@@ -29,8 +29,28 @@ img {
   object-fit: contain;
 }
 
-h1, h2, h4, h5, h6 {
-  word-break: break-all;
+@media (max-width: 320px) {
+  h1, h2, h4, h5, h6 {
+    font-size: 1.3em !important;
+  }
+}
+
+.loader {
+  position: relative;
+}
+.loader:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background: url("../ereader-images/splash_gif.gif") no-repeat 50%, #fff;
+  background-size: 100px 100px;
 }
 
 /**
@@ -51,4 +71,11 @@ body {
   -webkit-column-gap: 0;
      -moz-column-gap: 0;
           column-gap: 0;
+}
+body > * {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
