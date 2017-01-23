@@ -13,6 +13,7 @@ var app = (function () {
         DATA_ATTR_START_PAGE = 'data-start-page',
         DATA_ATTR_SECTION_ID = 'data-section-id',
         DATA_ATTR_LINK_ID = 'data-link-id',
+        DATA_ATTR_NOT_FIRST_LOAD = 'data-not-first-load',
         ID_SEARCH_RESULT = 'search-result',
         REPLACE_NAME_PAGE_CONTENT = '%pageContent%';
 
@@ -22,59 +23,61 @@ var app = (function () {
      * Create config
      * */
     var createConfig = function () {
-        var bodyScrollWidth = document.body.scrollWidth,
-            totalPages = bodyScrollWidth / documentWidth,
-            headerDocument = '<!DOCTYPE html><html>' + document.head.outerHTML + '<body>' + REPLACE_NAME_PAGE_CONTENT + '</body></html>',
-            headerDocumentWithoutScript = headerDocument.replace(/<script.*<\/script>/,'');
+        if (!document.body.hasAttribute(DATA_ATTR_NOT_FIRST_LOAD)) {
+            var bodyScrollWidth = document.body.scrollWidth,
+                totalPages = bodyScrollWidth / documentWidth,
+                configDocument = '<!DOCTYPE html><html>' + document.head.outerHTML +
+                    '<body ' + DATA_ATTR_NOT_FIRST_LOAD + ' >' + REPLACE_NAME_PAGE_CONTENT + '</body></html>';
 
-        var config = {
-            id: +document.querySelector('[' + DATA_ATTR_CHAPTER_ID + ']').getAttribute(DATA_ATTR_CHAPTER_ID),
-            startPage: +document.querySelector('[' + DATA_ATTR_START_PAGE + ']').getAttribute(DATA_ATTR_START_PAGE),
-            totalPages: totalPages,
-            chapterInnerText: document.body.innerText.replace(/[\n\r]/g, ' '),
-            chapterOuterHTML: headerDocumentWithoutScript.replace(REPLACE_NAME_PAGE_CONTENT, document.body.innerHTML),
-            sections: [],
-            tags: [],
-            links: []
-        };
-
-        var sections = document.querySelectorAll('[' + DATA_ATTR_SECTION_ID + ']');
-        Array.prototype.forEach.call(sections, function (item) {
-            var pageIndex = item.offsetLeft / documentWidth + 1;
-
-            var section = {
-                id: +item.getAttribute(DATA_ATTR_SECTION_ID),
-                offsetTop: item.offsetTop,
-                pageIndex: pageIndex,
-                pageNumber: config.startPage + pageIndex
+            var config = {
+                id: +document.querySelector('[' + DATA_ATTR_CHAPTER_ID + ']').getAttribute(DATA_ATTR_CHAPTER_ID),
+                startPage: +document.querySelector('[' + DATA_ATTR_START_PAGE + ']').getAttribute(DATA_ATTR_START_PAGE),
+                totalPages: totalPages,
+                chapterInnerText: document.body.innerText.replace(/[\n\r]/g, ' '),
+                chapterOuterHTML: configDocument.replace(REPLACE_NAME_PAGE_CONTENT, document.body.innerHTML),
+                sections: [],
+                tags: [],
+                links: []
             };
 
-            config.sections.push(section);
-        });
+            var sections = document.querySelectorAll('[' + DATA_ATTR_SECTION_ID + ']');
+            Array.prototype.forEach.call(sections, function (item) {
+                var pageIndex = item.offsetLeft / documentWidth + 1;
 
-        var tags = document.body.querySelectorAll('*');
-        Array.prototype.forEach.call(tags, function (item, i) {
-            var tag = {
-                tagIndex: i + 1,
-                pageNumber: Math.floor(item.offsetLeft / documentWidth + 1)
-            };
+                var section = {
+                    id: +item.getAttribute(DATA_ATTR_SECTION_ID),
+                    offsetTop: item.offsetTop,
+                    pageIndex: pageIndex,
+                    pageNumber: config.startPage + pageIndex
+                };
 
-            config.tags.push(tag);
-        });
+                config.sections.push(section);
+            });
 
-        var links = document.querySelectorAll('[' + DATA_ATTR_LINK_ID + ']');
-        Array.prototype.forEach.call(links, function (item) {
-             var link = {
-                 link: item.getAttribute(DATA_ATTR_LINK_ID),
-                 page: config.startPage + Math.floor(item.offsetLeft / documentWidth + 1)
-             };
+            var tags = document.body.querySelectorAll('*');
+            Array.prototype.forEach.call(tags, function (item, i) {
+                var tag = {
+                    tagIndex: i + 1,
+                    pageNumber: Math.floor(item.offsetLeft / documentWidth + 1)
+                };
 
-            config.links.push(link);
-        });
+                config.tags.push(tag);
+            });
 
-        var configToJson = JSON.stringify(config);
+            var links = document.querySelectorAll('[' + DATA_ATTR_LINK_ID + ']');
+            Array.prototype.forEach.call(links, function (item) {
+                var link = {
+                    link: item.getAttribute(DATA_ATTR_LINK_ID),
+                    page: config.startPage + Math.floor(item.offsetLeft / documentWidth + 1)
+                };
 
-        sendConfig(configToJson);
+                config.links.push(link);
+            });
+
+            var configToJson = JSON.stringify(config);
+
+            sendConfig(configToJson);
+        }
     };
 
     /**
@@ -91,6 +94,26 @@ var app = (function () {
         var loader = document.querySelector('.' + CLASS_NAME_LOADER);
 
         loader.classList.remove(CLASS_NAME_LOADER);
+    };
+
+    /**
+     * Build columns
+     * */
+    var buildColumns = function () {
+        var bodyChildren = document.body.children,
+            bodyWidth = 0;
+
+        Array.prototype.forEach.call(bodyChildren, function (item) {
+            if (item.nodeName !== 'SCRIPT') {
+                var itemWidth = item.scrollWidth;
+
+                item.style.width = item.scrollWidth + 'px';
+
+                bodyWidth +=itemWidth;
+            }
+        });
+
+        document.body.style.width = bodyWidth + 'px';
     };
 
     return {
@@ -176,6 +199,7 @@ var app = (function () {
          * Initialization
          * */
         init: function() {
+            buildColumns();
             removeLoader();
             createConfig();
             console.log(app.getSearchResultPosition('fifa', 1));

@@ -56,7 +56,8 @@ img {
 /**
  * Project
  */
-body {
+body > * {
+  float: left;
   width: 100vw;
   height: 100vh;
   -webkit-column-width: 100vw;
@@ -72,10 +73,7 @@ body {
      -moz-column-gap: 0;
           column-gap: 0;
 }
-body > * {
+body > * > * {
   padding-left: 5px !important;
   padding-right: 5px !important;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
-  break-inside: avoid;
 }
