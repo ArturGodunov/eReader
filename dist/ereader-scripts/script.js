@@ -1,8 +1,3 @@
-/**
- * For mobile developers
- *
- * You need methods 'sendConfig' and 'app.getSearchResultPosition'
- * */
 var app = (function () {
     "use strict";
 
@@ -116,6 +111,61 @@ var app = (function () {
         document.body.style.width = bodyWidth + 'px';
     };
 
+    /**
+     * Highlight
+     * */
+    var buildHighlight = function () {
+        document.addEventListener('click', function () {
+            var selection = window.getSelection(),
+                startSelectionTag,
+                endSelectionTag,
+                startSelectionTagCoord,
+                popupElement;
+
+            function toggleHighlightPopup(event) {
+                // event.stopPropagation();
+
+                var target = event.target;
+
+                if (startSelectionTag && !target.hasAttribute('data-highlight-popup')) {
+                    startSelectionTag.outerHTML = startSelectionTag.innerHTML;
+                }
+console.log('popupElement',  popupElement);
+console.log('startSelectionTag', startSelectionTag);
+                if (popupElement) {
+                    popupElement.parentNode.removeChild(popupElement);
+                }
+
+                popupElement = null;
+                startSelectionTag = null;
+                // selection.removeAllRanges();
+            }
+
+            document.removeEventListener('click', toggleHighlightPopup);
+
+            if (!selection.isCollapsed) {
+                document.designMode = 'on';
+                document.execCommand('hiliteColor', false, '#C0F42E');
+                document.designMode = 'off';
+
+                startSelectionTag = selection.anchorNode.parentNode;
+                endSelectionTag = selection.focusNode.parentNode;
+                startSelectionTagCoord = startSelectionTag.getBoundingClientRect();
+                popupElement = document.createElement('div');
+
+                popupElement.className = 'highlight-popup';
+                popupElement.innerHTML = '<div data-highlight-popup class="highlight-popup--btn">Save</div>';
+                document.body.appendChild(popupElement);
+                popupElement.style.top = (startSelectionTagCoord.top - popupElement.offsetHeight) + 'px';
+                popupElement.style.left =
+                    (startSelectionTagCoord.left + startSelectionTagCoord.width / 2 - popupElement.offsetWidth / 2)
+                    + 'px';
+
+                document.addEventListener('click', toggleHighlightPopup);
+            }
+        });
+    };
+
     return {
         /**
          * Get search result position
@@ -202,7 +252,8 @@ var app = (function () {
             buildColumns();
             removeLoader();
             createConfig();
-            console.log(app.getSearchResultPosition('fifa', 1));
+            buildHighlight();
+            // console.log(app.getSearchResultPosition('fifa', 1));
         }
     };
 })();
@@ -211,3 +262,4 @@ var app = (function () {
  * Document load
  * */
 window.onload = app.init;
+

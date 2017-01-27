@@ -1,26 +1,5 @@
-//.columns-body{
-//  width: 100vw;
-//  height: 100vh;
-//  column-width: 100vw;
-//  column-count: auto;
-//  column-fill: auto;
-//  column-gap: 0;
-//
-//  & > *{
-//    padding-left: 5px !important;
-//    padding-right: 5px !important;
-//    -webkit-column-break-inside: avoid;
-//    page-break-inside: avoid;
-//    break-inside: avoid;
-//
-//    & > h1, h2, h4, h5, h6{
-//      margin-top: 2em;
-//    }
-//  }
-//}
-
 body{
-  & > *{
+  & > *:not(.highlight-popup){
     float: left;
     width: 100vw;
     height: 100vh;
